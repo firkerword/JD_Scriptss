@@ -58,7 +58,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.45"
+	cron_version="3.46"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -96,6 +96,7 @@ cat >>/etc/crontabs/root <<EOF
 0 1-23/1 * * * $node $dir_file_js/jd_cfd_loop.js #财富岛挂气球#100#
 59 */1 * * * $dir_file/jd.sh kill_cfd #杀气球#100#
 59 23 * * * $python3 $dir_file_js/jd_blueCoin.py >/tmp/jd_blueCoin.log	#东东超市兑换#100#
+45 23 * * * $dir_file/jd.sh kill_ccr #杀掉所有并发进程，为零点准备#100#
 ###########100##########请将其他定时任务放到底下###############
 #**********这里是backnas定时任务#100#******************************#
 0 */4 * * * $dir_file/jd.sh backnas  >/tmp/jd_backnas.log 2>&1 #每4个小时备份一次script,如果没有填写参数不会运行#100#
@@ -264,6 +265,7 @@ cat >$dir_file/config/tmp/panghu999.txt <<EOF
 	jd_opencard2.js		#柠檬一次性开卡
 	jd_lsj.js		#柠檬京东零食街
 	jd_twz-star.js		#特务Z行动-星小店
+	jd_ylyn.js		#伊利养牛
 EOF
 
 for script_name in `cat $dir_file/config/tmp/panghu999.txt | awk '{print $1}'`
@@ -569,7 +571,7 @@ kill_cfd() {
 
 run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
-	jd_joy.js		#宠汪汪
+	#jd_joy.js		#宠汪汪
 	jd_moneyTree.js 	#摇钱树
 	jd_jxzpk.js		#pk
 	jd_qqxing.js		#星系牧场,需要手动去开卡然后进去玩一下
@@ -613,7 +615,7 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_shop.js 			#进店领豆，早点领，一天也可以执行两次以上
 	jd_fruit.js 			#东东水果，6-9点 11-14点 17-21点可以领水滴
 	jd_pet.js 			#东东萌宠，跟手机商城同一时间
-	jd_joy_steal.js 		#可偷好友积分，零点开始，六点再偷一波狗粮
+	#jd_joy_steal.js 		#可偷好友积分，零点开始，六点再偷一波狗粮
 	jd_superMarket.js 		#东东超市,6点 18点多加两场用于收金币
 	jd_gold_creator.js		#金榜创造营
 	jd_goodMorning.js		#早起福利
@@ -674,6 +676,7 @@ run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
 	jd_syj.js 			#赚京豆
 	jd_jump.js			#跳跳乐瓜分京豆
+	jd_ylyn.js			#伊利养牛
 EOF
 	echo -e "$green run_08_12_16$start_script_time $white"
 
@@ -2142,7 +2145,7 @@ additional_settings() {
 	done
 
 	#财富岛
-	new_cfd="'BA4E810FF2B7A0A2595AB5B0203D8D364F8BA8AA0778CA8104F5FB44F4B4F6C0',\n'C9EF5FCEDE6E93FC3B54FD18B84861D57D41124FBF7FDA6CCCA49E6DAAAB9CAD',\n'9B4FB7103CF7052CBE0BB79FBDBB482820E48BC908D7C2400F1CE51D18BE6042',\n'CF7BD2AE3D422F84D269AF523BA64CD8F7B8530CD1D8D98BEE24A95F08C8F454',"
+	new_cfd="'BA4E810FF2B7A0A2595AB5B0203D8D36B861A1AC85A3A9E6C65813C99BDB0935',\n'C9EF5FCEDE6E93FC3B54FD18B84861D54A1589148B877D21ADE4B1396A502618',\n'9B4FB7103CF7052CBE0BB79FBDBB48287FF157556005E031E68B6CAEC306FC14',\n'CF7BD2AE3D422F84D269AF523BA64CD8C82F334F3DE2B610CCAE71CD98CD8486',"
 	tuimao_cfd="'1DEA855BBF23FF562E0A2F74BCD523FA5B656BDC934F1706FA0919DFF66E9530',\n'A72F74612214D32FC048691C06E2F243E6FB58908F5F2F77630FF3678185BD34',"
 	zuoyou_cfd="'C17C0F34CBBDB8F5FA5EA08DA98ACC97',\n'0BB5DE542D0BF1AF408F5C29AEE42B28A9C17D3FA167FD865A605B3E89D26A36',\n'179E4669C1C55F316BEDB78B465B0A11A3DF52989C108D582C10EDDCDCCD9E9B',\n'C6341A89CE797F531780D958ABA60FFED84C2FEF0409AAE8923004F53E450796',"
 	yangguang_cfd="'4E5A90229430CEE2A4FF17A58F054FC5F43674C6A918005D3047AD0C13C8BD37',\n'DD0B9E9A251F06CA576B517E26D3A0F938FABE557386120BE75FF9AFF01A58C6',"
