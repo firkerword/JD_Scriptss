@@ -210,7 +210,7 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_unsubscribe.js		#取关京东店铺和商品
 EOF
 
-for script_name in `cat $dir_file/config/tmp/lxk0301_script.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/lxk0301_script.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	echo -e "$yellow copy $green$script_name$white"
 	cp  $dir_file/git_clone/lxk0301_back/$script_name  $dir_file_js/$script_name
@@ -222,7 +222,7 @@ cat >$dir_file/config/tmp/JDHelloWorld_script.txt <<EOF
 	jd_big_winner.js		#翻翻乐
 EOF
 
-for script_name in `cat $dir_file/config/tmp/JDHelloWorld_script.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/JDHelloWorld_script.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	echo -e "$yellow copy $green$script_name$white"
 	cp  $dir_file/git_clone/JDHelloWorld/$script_name  $dir_file_js/$script_name
@@ -238,7 +238,7 @@ cat >$dir_file/config/tmp/longzhuzhu_qx.txt <<EOF
 	long_super_redrain.js 		#整点红包雨
 EOF
 
-for script_name in `cat $dir_file/config/tmp/longzhuzhu_qx.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/longzhuzhu_qx.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$longzhuzhu_url"
 	#wget $nianyuguai_url/$script_name -O $dir_file_js/$script_name
@@ -254,7 +254,7 @@ cat >$dir_file/config/tmp/passerby_url.txt <<EOF
 	jddj_getPoints.js		#京东到家鲜豆庄园收水滴 作者5分钟收一次
 EOF
 
-for script_name in `cat $dir_file/config/tmp/passerby_url.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/passerby_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$passerby_url"
 	wget $passerby_url/$script_name -O $dir_file_js/$script_name
@@ -269,7 +269,7 @@ cat >$dir_file/config/tmp/panghu999.txt <<EOF
 	jd_ylyn.js		#伊利养牛
 EOF
 
-for script_name in `cat $dir_file/config/tmp/panghu999.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/panghu999.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$panghu999"
 	wget $panghu999/$script_name -O $dir_file_js/$script_name
@@ -282,7 +282,7 @@ cat >$dir_file/config/tmp/panghu999_url.txt <<EOF
 	jd_dianjing.js		#电竞经理
 EOF
 
-for script_name in `cat $dir_file/config/tmp/panghu999_url.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/panghu999_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$panghu999_url"
 	wget $panghu999_url/$script_name -O $dir_file_js/$script_name
@@ -293,14 +293,14 @@ smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	jd_summer_movement.js		#燃动夏季
 	jd_summer_movement_help.js	#燃动夏季助力
-	gua_wealth_island.js 		#财富岛新版
+	#gua_wealth_island.js 		#财富岛新版
 	jd_necklace.js  		#点点券
 	ZooFaker_Necklace.js		#点点券依赖文件
 	jd_joy.js			#宠汪汪
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
 EOF
 
-for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$smiek2221_url"
 	wget $smiek2221_url/$script_name -O $dir_file_js/$script_name
@@ -317,7 +317,7 @@ cat >$dir_file/config/tmp/cdle_url.txt <<EOF
 	jd_cash_exchange.js		#签到领现金兑换
 EOF
 
-for script_name in `cat $dir_file/config/tmp/cdle_url.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/cdle_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$cdle_url"
 	wget $cdle_url/$script_name -O $dir_file_js/$script_name
@@ -331,7 +331,7 @@ cat >$dir_file/config/tmp/Tsukasa007_url.txt <<EOF
 	jd_joypark_task.js		#汪汪乐园每日任务
 EOF
 
-for script_name in `cat $dir_file/config/tmp/Tsukasa007_url.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/Tsukasa007_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$Tsukasa007_url"
 	wget $Tsukasa007_url/$script_name -O $dir_file_js/$script_name
@@ -343,7 +343,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_jxqd.js			#京喜签到
 EOF
 
-for script_name in `cat $dir_file/config/tmp/zero205_url.txt | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$zero205_url"
 	wget $zero205_url/$script_name -O $dir_file_js/$script_name
@@ -390,7 +390,7 @@ cat >/tmp/del_js.txt <<EOF
 	jd_jxzpk.js			#京享值pk
 EOF
 
-for script_name in `cat /tmp/del_js.txt | awk '{print $1}'`
+for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	rm -rf $dir_file_js/$script_name
 done
