@@ -1,10 +1,11 @@
 #!/bin/sh
 #
-# Copyright (C) 2020 luci-app-jd-dailybonus <jerrykuku@qq.com>
+#by:ITdesk
 #
-# This is free software, licensed under the GNU General Public License v3.
-# See /LICENSE for more information.
+#Github:https://github.com/firkerword/JD_Script/tree/main
 #
+#如果你魔改我的脚本，请魔改的彻底一点，不要留我的qq群，没时间处理一堆不用我库的人，决定魔改那就自己维护，你好我也好。
+
 #set -x
 
 
@@ -366,10 +367,8 @@ cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_senbeans.js			#来客有礼
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_ddnc_farmpark.js		#东东乐园 Wenmoux脚本
-	jd_qqxing.js			#星系牧场,需要手动去开卡然后进去玩一下 Wenmoux脚本
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
-	jd_jxzpk.js			#京享值pk
 	jd_all_bean_change.js 		#京东月资产变动通知
 	adolf_superbox.js		#超级盒子
 	jd_check_cookie.js		#检测cookie是否存活（暂时不能看到还有几天到期）
@@ -387,10 +386,8 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jd_blueCoin.js			#东东兑换
-	jd_olympicgames.js 		#全民运动会
-	jd_europeancup.js		#狂欢欧洲杯
-	jd_joy_help.js
+	jd_qqxing.js			#星系牧场,需要手动去开卡然后进去玩一下 Wenmoux脚本
+	jd_jxzpk.js			#京享值pk
 EOF
 
 for script_name in `cat /tmp/del_js.txt | awk '{print $1}'`
@@ -467,7 +464,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jddj_plantBeans.js 		#京东到家鲜豆庄园脚本 一天一次
 	jd_dreamFactory.js 		#京喜工厂
 	adolf_superbox.js		#超级盒子
-	jd_jxzpk.js			#pk
 	jd_lsj.js			#柠檬京东零食街
 	jd_ddnc_farmpark.js		#东东乐园
 	jd_sign.js  			#京东签到针对图形验证码
@@ -573,8 +569,6 @@ run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
 	#jd_joy.js		#宠汪汪
 	jd_moneyTree.js 	#摇钱树
-	jd_jxzpk.js		#pk
-	jd_qqxing.js		#星系牧场,需要手动去开卡然后进去玩一下
 EOF
 	echo -e "$green run_02$start_script_time $white"
 
@@ -636,7 +630,6 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_jxqd.js			#京喜签到
 	jd_morningSc.js			#早起赢现金
 	adolf_superbox.js		#超级盒子
-	jd_jxzpk.js			#pk
 	jd_lsj.js			#柠檬京东零食街
 	jd_ddnc_farmpark.js		#东东乐园
 	jd_rankingList.js 		#京东排行榜签到领京豆
@@ -1284,7 +1277,7 @@ checklog() {
 	for i in `cat $log2`
 	do
 		echo "#### ${i}详细的错误" >> $log3
-		grep -E  "错误|失败|module" $i | grep -v '京东天天\|京东商城\|京东拍拍\|京东现金\|京东秒杀\|京东日历\|京东金融\|京东金贴\|金融京豆\|检测\|参加团主\|参团失败\|node_modules\|sgmodule\|无助力机会\|不可以为自己助力\|助力次数耗尽' | sort -u >> $log3
+		grep -E  "错误|失败|module" $i | grep -v '京东天天\|京东商城\|京东拍拍\|京东现金\|京东秒杀\|京东日历\|京东金融\|京东金贴\|金融京豆\|检测\|参加团主\|参团失败\|node_modules\|sgmodule\|无助力机会\|不可以为自己助力\|助力次数耗尽\|礼包已经抢完\|限流严重\|不能去好友工厂打工啦' | sort -u >> $log3
 	done
 
 	if [ $num = "no_error" ]; then
@@ -2145,7 +2138,7 @@ additional_settings() {
 	done
 
 	#财富岛
-	new_cfd="'BA4E810FF2B7A0A2595AB5B0203D8D36B861A1AC85A3A9E6C65813C99BDB0935',\n'C9EF5FCEDE6E93FC3B54FD18B84861D54A1589148B877D21ADE4B1396A502618',\n'9B4FB7103CF7052CBE0BB79FBDBB48287FF157556005E031E68B6CAEC306FC14',\n'CF7BD2AE3D422F84D269AF523BA64CD8C82F334F3DE2B610CCAE71CD98CD8486',"
+	new_cfd="'BA4E810FF2B7A0A2595AB5B0203D8D36A83D7DACE78C52ED679ADED79575DA06',\n'C9EF5FCEDE6E93FC3B54FD18B84861D581B4061D8751A04418369391645FE6EB',\n'9B4FB7103CF7052CBE0BB79FBDBB4828D36D68CFA8AB801238349C707E53212B',\n'CF7BD2AE3D422F84D269AF523BA64CD841D874E1215131991EC597F11A7C44F3',"
 	tuimao_cfd="'1DEA855BBF23FF562E0A2F74BCD523FA5B656BDC934F1706FA0919DFF66E9530',\n'A72F74612214D32FC048691C06E2F243E6FB58908F5F2F77630FF3678185BD34',"
 	zuoyou_cfd="'C17C0F34CBBDB8F5FA5EA08DA98ACC97',\n'0BB5DE542D0BF1AF408F5C29AEE42B28A9C17D3FA167FD865A605B3E89D26A36',\n'179E4669C1C55F316BEDB78B465B0A11A3DF52989C108D582C10EDDCDCCD9E9B',\n'C6341A89CE797F531780D958ABA60FFED84C2FEF0409AAE8923004F53E450796',"
 	yangguang_cfd="'4E5A90229430CEE2A4FF17A58F054FC5F43674C6A918005D3047AD0C13C8BD37',\n'DD0B9E9A251F06CA576B517E26D3A0F938FABE557386120BE75FF9AFF01A58C6',"
