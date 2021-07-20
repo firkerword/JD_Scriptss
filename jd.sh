@@ -59,7 +59,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.46"
+	cron_version="3.47"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -94,8 +94,7 @@ cat >>/etc/crontabs/root <<EOF
 0 0 * * * $python3 $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py >/tmp/jd_getFollowGift.log #关注有礼#100#
 0 8,15 * * * $python3 $dir_file/git_clone/curtinlv_script/OpenCard/jd_OpenCard.py  >/tmp/jd_OpenCard.log #开卡程序#100#
 59 23 * * 0,1,2,5,6 sleep 59 && $dir_file/jd.sh run_jd_cash >/tmp/jd_cash_exchange.log	#签到领现金兑换#100#
-0 1-23/1 * * * $node $dir_file_js/jd_cfd_loop.js #财富岛挂气球#100#
-59 */1 * * * $dir_file/jd.sh kill_cfd #杀气球#100#
+0 */1 * * * $dir_file/jd.sh cfd_loop #挂气球#100#
 59 23 * * * $python3 $dir_file_js/jd_blueCoin.py >/tmp/jd_blueCoin.log	#东东超市兑换#100#
 45 23 * * * $dir_file/jd.sh kill_ccr #杀掉所有并发进程，为零点准备#100#
 ###########100##########请将其他定时任务放到底下###############
@@ -552,7 +551,19 @@ EOF
 }
 
 cfd_loop() {
-	$node $dir_file_js/jd_cfd_loop.js			#财富岛挂气球
+kill_cfd
+cat >/tmp/jd_tmp/cfd_loop <<EOF
+	jd_cfd_loop.js			#财富岛挂气球
+EOF
+	echo -e "$green cfd_loop$start_script_time $white"
+
+	for i in `cat /tmp/jd_tmp/cfd_loop | grep -v "#.*js" | awk '{print $1}'`
+	do
+		$node $dir_file_js/$i
+		$run_sleep
+	done
+
+	echo -e "$green cfd_loop$stop_script_time $white"
 }
 
 kill_cfd() {
@@ -808,20 +819,6 @@ echo -e "$green============整理完成，可以提交了（没加群的忽略�
 
 }
 
-concurrent_js() {
-	if [ $(ls $ccr_js_file/ | wc -l ) -gt "0" ];then
-		for i in `ls $ccr_js_file/`
-		do
-			dir_file_js="$ccr_js_file/$i"
-			$action &
-		done
-	else
-		echo -e "$green>>并发文件夹为空开始下载$white"
-			update
-			concurrent_js_if
-	fi
-}
-
 concurrent_js_update() {
 	echo -e "$green>> 创建并发文件夹$white"
 	if [ "$ccr_if" == "yes" ];then
@@ -919,7 +916,7 @@ kill_ccr() {
 
 if_ps() {
 	sleep 10
-	ps_if=$(ps -ww | grep "js$" | grep -v "index.js" | grep -v "jd_cfd_loop.js" | awk '{print $1}' |wc -l)
+	ps_if=$(ps -ww | grep "js$" | grep -v 'index.js\|jd_cfd_loop.js\|jd_try.js' | awk '{print $1}' |wc -l)
 	num1="10"
 	num2="20"
 	num3="30"
@@ -952,6 +949,20 @@ if_ps() {
 		if_ps
 	fi
 	#for i in `ps -ww | grep "jd.sh run_" | grep -v grep | awk '{print $1}'`;do kill -9 $i ;done
+}
+
+concurrent_js() {
+	if [ $(ls $ccr_js_file/ | wc -l ) -gt "0" ];then
+		for i in `ls $ccr_js_file/`
+		do
+			dir_file_js="$ccr_js_file/$i"
+			$action &
+		done
+	else
+		echo -e "$green>>并发文件夹为空开始下载$white"
+			update
+			concurrent_js_if
+	fi
 }
 
 concurrent_js_if() {
@@ -994,6 +1005,10 @@ concurrent_js_if() {
 			if_ps
 			concurrent_js_clean
 		;;
+		cfd_loop)
+			action="cfd_loop"
+			concurrent_js
+		;;
 		run_01|run_02|run_045|run_08_12_16|run_020|run_10_15_20|run_06_18|run_jd_cash)
 			action="$action1"
 			concurrent_js
@@ -1012,6 +1027,10 @@ concurrent_js_if() {
 			$action1
 			concurrent_js_run_07
 			;;
+			cfd_loop)
+				action="cfd_loop"
+				concurrent_js
+			;;
 			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
 			$action1
 			;;
@@ -1029,6 +1048,10 @@ concurrent_js_if() {
 			ccr_run
 			$action2
 			concurrent_js_run_07
+			;;
+			cfd_loop)
+				action="cfd_loop"
+				concurrent_js
 			;;
 			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_020|run_jd_cash)
 			$action2
@@ -1686,6 +1709,10 @@ help() {
 	echo ""
 	echo -e "$green  sh \$jd jx $white 				#查询京喜商品生产使用时间"
 	echo ""
+	echo -e "$green  sh \$jd cfd_loop $white  			#执行财富岛挂气球（默认每一个小时运行一次）"
+	echo ""
+	echo -e "$green  sh \$jd kill_cfd $white  			#杀掉财富岛挂进程参数"
+	echo ""
 	echo -e "$green  sh \$jd jd_sharecode $white 			#查询京东所有助力码"
 	echo ""
 	echo -e "$green  sh \$jd checklog $white  			#检测log日志是否有错误并推送"
@@ -1737,22 +1764,22 @@ help() {
 
 additional_settings() {
 
-	for i in `cat $dir_file/config/collect_script.txt | awk '{print $1}'`
+	for i in `cat $dir_file/config/collect_script.txt | grep -v "#.*js" | awk '{print $1}'`
 	do
 		sed -i "s/$.isNode() ? 20 : 5/0/g" $dir_file_js/$i
 	done
 
-	for i in `cat $dir_file/config/collect_script.txt | awk '{print $1}'`
+	for i in `cat $dir_file/config/collect_script.txt | grep -v "#.*js" | awk '{print $1}'`
 	do
 		sed -i "s/$.isNode() ? 10 : 5/0/g" $dir_file_js/$i
 	done
 
-	for i in `cat $dir_file/config/collect_script.txt | awk '{print $1}'`
+	for i in `cat $dir_file/config/collect_script.txt | grep -v "#.*js" | awk '{print $1}'`
 	do
 		sed -i "s/helpAu = true/helpAu = false/g" $dir_file_js/$i
 	done
 
-	for i in `cat $dir_file/config/collect_script.txt | awk '{print $1}'`
+	for i in `cat $dir_file/config/collect_script.txt | grep -v "#.*js" | awk '{print $1}'`
 	do
 		sed -i "s/helpAuthor=true/helpAuthor=false/g" $dir_file_js/$i
 	done
@@ -2201,7 +2228,7 @@ additional_settings() {
 	rm -rf $dir_file_js/app.*.js
 
 	#默认关闭京东到家通知
-	sed -i "s/isNotify = true/isNotify = false/g" $ccr_js_file/$i/jddj_fruit.js
+	sed -i "s/isNotify = true/isNotify = false/g" $dir_file_js/jddj_fruit.js
 
 }
 
@@ -2512,10 +2539,10 @@ if [[ -z $action1 ]]; then
 	help
 else
 	case "$action1" in
-		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
+		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash|cfd_loop)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|cfd_loop|kill_cfd)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_cfd)
 		$action1
 		;;
 		kill_ccr)
@@ -2531,10 +2558,10 @@ else
 		echo ""
 	else
 		case "$action2" in
-		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
+		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash|cfd_loop)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|cfd_loop|kill_cfd)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_cfd)
 		$action2
 		;;
 		kill_ccr)
