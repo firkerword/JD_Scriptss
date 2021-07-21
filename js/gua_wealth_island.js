@@ -6,6 +6,8 @@
 */
 
 const $ = new Env('财富大陆');
+const {Md5} = require('ts-md5');
+const axios = require('axios');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 // const notify = $.isNode() ? require('./sendNotify') : '';
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
@@ -56,14 +58,39 @@ $.appId = 10032;
   // 助力
   let res = [], res2 = [];
   $.InviteLists = []
-  if (HelpAuthorFlag) {
-    $.innerInviteList = await getAuthorShareCode('https://raw.githubusercontent.com/smiek2221/updateTeam/master/shareCodes/wealth_island_code_one.json');
-    res2 = await getAuthorShareCode('https://raw.githubusercontent.com/smiek2221/updateTeam/master/shareCodes/wealth_island_code.json');
-    $.innerInviteLists = getRandomArrayElements([...res, ...res2], [...res, ...res2].length);
-    $.InviteLists.push(...$.InviteList,...$.innerInviteList,...$.innerInviteLists);
-  }else{
-    $.InviteLists.push(...$.InviteList);
+  // if (HelpAuthorFlag) {
+  //   $.innerInviteList = await getAuthorShareCode('https://raw.githubusercontent.com/smiek2221/updateTeam/master/shareCodes/wealth_island_code_one.json');
+  //   res2 = await getAuthorShareCode('https://raw.githubusercontent.com/smiek2221/updateTeam/master/shareCodes/wealth_island_code.json');
+  //   $.innerInviteLists = getRandomArrayElements([...res, ...res2], [...res, ...res2].length);
+  //   $.InviteLists.push(...$.InviteList,...$.innerInviteList,...$.innerInviteLists);
+  // }else{
+  //   $.InviteLists.push(...$.InviteList);
+  // }
+
+
+
+})()
+  .catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+  }).finally(() => {
+    $.done();
+  })
+
+async function getShareCode () {
+      // 获取随机助力码
+  let HELP_HW = 'true';
+  if (HELP_HW === 'true') {
+    // try {
+      
+      let resultsX = await axios.get("http://cfd.212618.xyz/cfd.php")
+      $.InviteLists = resultsX.data.data;
+      console.log('获取助力码成功')
+
+    // } catch (e) {
+    //   console.log('获取助力码出错')
+    // }
   }
+
   for (let i = 0; i < cookiesArr.length; i++) {
     $.cookie = cookiesArr[i];
     $.canHelp = true;
@@ -87,12 +114,10 @@ $.appId = 10032;
       await $.wait(1000);
     }
   }
-})()
-  .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-  }).finally(() => {
-    $.done();
-  })
+}
+
+
+
 async function run() {
   try{
     $.HomeInfo = ''
@@ -109,6 +134,7 @@ async function run() {
     if($.HomeInfo){
       $.InviteList.push($.HomeInfo.strMyShareId)
       console.log(`等级:${$.HomeInfo.dwLandLvl} 当前金币:${$.HomeInfo.ddwCoinBalance} 当前财富:${$.HomeInfo.ddwRichBalance} 助力码:${$.HomeInfo.strMyShareId}`)
+      await makeShareCodes(`${$.HomeInfo.strMyShareId}`)
     }
     if($.LeadInfo && $.LeadInfo.dwLeadType == 2){
       await $.wait(2000)
@@ -117,6 +143,7 @@ async function run() {
       await GetHomePageInfo()
       await $.wait(1000)
     }
+
     // 清理背包
     await cleanbag()
     // 故事会
@@ -137,12 +164,33 @@ async function run() {
     await ActTask()
     // 日常任务、成就任务
     await UserTask()
-
+    await getShareCode()
   }
   catch (e) {
     console.log(e);
   }
 }
+
+async function makeShareCodes(code) {
+  // return true;
+  return new Promise(async (resolve, reject) => {
+    let pin = $.cookie.match(/pt_pin=([^;]*)/)[1]
+    pin = Md5.hashStr(pin)
+    await axios.get(`http://cfd.212618.xyz/cfd.php?type=save&pin=${pin}&sharecode=${code}`)
+    //await getAuthorShareCode(`http://cfd.212618.xyz/cfd.php?type=save&pin=${pin}&sharecode=${code}`)
+      .then(res => {
+        if (res.data.status === 1)
+          console.log('已自动提交助力码')
+        else
+          console.log('提交失败！已提交farm的cookie才可提交cfd')
+        resolve(200)
+      })
+      .catch(e => {
+        reject('访问助力池出错')
+      })
+  })
+}
+
 async function GetHomePageInfo() {
   let additional= `&ddwTaskId&strShareId&strMarkList=guider_step%2Ccollect_coin_auth%2Cguider_medal%2Cguider_over_flag%2Cbuild_food_full%2Cbuild_sea_full%2Cbuild_shop_full%2Cbuild_fun_full%2Cmedal_guider_show%2Cguide_guider_show%2Cguide_receive_vistor`
   let stk= `_cfd_t,bizCode,ddwTaskId,dwEnv,ptag,source,strMarkList,strShareId,strZone`
@@ -207,10 +255,15 @@ async function StoryInfo(){
         if(TypeCnt){
           console.log(`出售`)
           await $.wait(1000)
-          additional = `&ptag=&strTypeCnt=${TypeCnt}&dwSceneId=1`
+          additional = `&ptag=&strTypeCnt=${TypeCnt}&dwSceneId=2`
           stk = `_cfd_t,bizCode,dwEnv,dwSceneId,ptag,source,strTypeCnt,strZone`
           res = await taskGet(`story/sellgoods`, stk, additional)
           await printRes(res, '贩卖')
+          additional = `&ptag=&strStoryId=${$.HomeInfo.StoryInfo.StoryList[0].strStoryId}&dwType=4&ddwTriggerDay=${$.HomeInfo.StoryInfo.StoryList[0].ddwTriggerDay}`
+          stk = `_cfd_t,bizCode,ddwTriggerDay,dwEnv,dwType,ptag,source,strStoryId,strZone`
+          type = `CollectorOper`
+          res = await taskGet(`story/${type}`, stk, additional)
+          // console.log(JSON.stringify(res))
         }
       }else if($.HomeInfo.StoryInfo.StoryList[0].dwType == 1 && ( (res && res.iRet == 0) || res == '')){
         if(res && res.iRet == 0 && res.Data && res.Data.Serve && res.Data.Serve.dwWaitTime){
@@ -350,7 +403,7 @@ async function sign(){
     }
     
     if($.Aggrtask && $.Aggrtask.Data && $.Aggrtask.Data.Employee && $.Aggrtask.Data.Employee.EmployeeList){
-        if($.Aggrtask.Data && $.Aggrtask.Data.Employee && !$.Aggrtask.Data.Employee.EmployeeList){
+        if($.Aggrtask.Data && $.Aggrtask.Data.Employee && $.Aggrtask.Data.Employee.EmployeeList){
         console.log(`\n领取邀请奖励`)
         for(let i of $.Aggrtask.Data.Employee.EmployeeList){
           if(i.dwStatus == 0){
@@ -602,7 +655,6 @@ async function UserTask(){
         console.log(`任务 ${item.taskName} (${item.completedTimes}/${item.targetTimes})`)
         if (item.awardStatus == 2 && item.completedTimes === item.targetTimes) {
           res = await taskGet(`Award`, '_cfd_t,bizCode,dwEnv,ptag,source,strZone,taskId', `&ptag=&taskId=${item.taskId}`)
-          console.log(JSON.stringify(res))
           if(res.ret == 0){
             if(res.data.prizeInfo){
               res.data.prizeInfo = $.toObj(res.data.prizeInfo)
@@ -684,8 +736,8 @@ function printRes(res, msg=''){
     if(res.Data){
       result = res.Data
     }
-    if(result.ddwCoin || result.ddwMoney || result.strPrizeName){
-      console.log(`${msg}获得:${result.ddwCoin && ' '+result.ddwCoin+'金币' || ''}${result.ddwMoney && ' '+result.ddwMoney+'财富' || ''}${result.strPrizeName && ' '+result.strPrizeName+'红包' || ''}`)
+    if(result.ddwCoin || result.ddwMoney || result.strPrizeName || result.StagePrizeInfo && result.StagePrizeInfo.strPrizeName){
+      console.log(`${msg}获得:${result.ddwCoin && ' '+result.ddwCoin+'金币' || ''}${result.ddwMoney && ' '+result.ddwMoney+'财富' || ''}${result.strPrizeName && ' '+result.strPrizeName+'红包' || ''}${result.StagePrizeInfo && result.StagePrizeInfo.strPrizeName && ' '+result.StagePrizeInfo.strPrizeName || ''}`)
     }else if(result.Prize){
       console.log(`${msg}获得: ${result.Prize.strPrizeName && '优惠券 '+result.Prize.strPrizeName || ''}`)
     }else if(res && res.sErrMsg){
