@@ -282,6 +282,7 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	ZooFaker_Necklace.js		#点点券依赖文件
 	jd_joy.js			#宠汪汪
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
+        gua_MMdou.js                    #赚京豆MM豆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -639,6 +640,7 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
 	jd_jin_tie.js 			#领金贴
 	jd_unsubscribe.js 		#取关店铺，没时间要求
+        gua_MMdou.js                    #赚京豆MM豆
 EOF
 	echo -e "$green run_07$start_script_time $white"
 
@@ -2242,7 +2244,7 @@ npm_install() {
 	#安装js模块
 	cp $dir_file/git_clone/lxk0301_back/package.json $dir_file/package.json
 	cd $dir_file && npm -g install
-	npm install -g request http stream zlib vm png-js fs got tough-cookie audit date-fns
+	npm install -g request http stream zlib vm png-js fs got tough-cookie audit date-fns ts-md5
 	npm install --save axios
 	cd $dir_file/cookies_web && npm -g install
 

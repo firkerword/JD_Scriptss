@@ -44,6 +44,7 @@ $.appId = 10032;
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg('【京东账号一】宠汪汪积分兑换奖品失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+    return
   }
   console.log(`\n
 想要我的财富吗
@@ -90,7 +91,7 @@ async function getShareCode () {
       
       let resultsX = await axios.get("http://cfd.212618.xyz/cfd.php")
       $.InviteLists = resultsX.data.data;
-      console.log('获取助力码成功')
+      console.log(`获取助力码成功: ${$.InviteLists}`)
 
     // } catch (e) {
     //   console.log('获取助力码出错')
@@ -103,22 +104,32 @@ async function getShareCode () {
     $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
     $.index = i + 1;
     if ($.InviteLists && $.InviteLists.length) console.log(`\n******开始【邀请好友助力】*********\n`);
-    for (let j = 0; j < $.InviteLists.length && $.canHelp; j++) {
+    console.log(`助力个数为:${$.InviteLists.length}`);
+
+    for (let j = 0; j < $.InviteLists.length ; j++) {
+      console.log(`j: ${j}`);
       $.inviteId = $.InviteLists[j];
       console.log(`${$.UserName} 助力 ${$.inviteId}`);
       let res = await taskGet(`story/helpbystage`, '_cfd_t,bizCode,dwEnv,ptag,source,strShareId,strZone', `&strShareId=${$.inviteId}`)
+      console.log("===================================")
+      console.log(res)
+      console.log("===================================")
       if(res && res.iRet == 0){
         console.log(`助力成功: 获得${res.Data && res.Data.GuestPrizeInfo && res.Data.GuestPrizeInfo.strPrizeName || ''}`)
-      }else if(res && res.sErrMsg){
-        console.log(res.sErrMsg)
-        if(res.sErrMsg.indexOf('助力次数达到上限') > -1 || res.iRet === 2232 || res.sErrMsg.indexOf('助力失败') > -1){
-          break
-        }
-      }else{
-        console.log(JSON.stringify(res))
       }
+
+      // else if(res && res.sErrMsg){
+      //   console.log(res.sErrMsg)
+      //   if(res.sErrMsg.indexOf('助力次数达到上限') > -1 || res.iRet === 2232 || res.sErrMsg.indexOf('助力失败') > -1){
+      //     break
+      //   }
+      // }else{
+      //   console.log(JSON.stringify(res))
+      // }
       await $.wait(1000);
     }
+
+
   }
 }
 
@@ -136,7 +147,7 @@ async function run() {
     $.Employtask = []
     
     await GetHomePageInfo()
-
+    await getShareCode()
     if($.HomeInfo){
       $.InviteList.push($.HomeInfo.strMyShareId)
       console.log(`等级:${$.HomeInfo.dwLandLvl} 当前金币:${$.HomeInfo.ddwCoinBalance} 当前财富:${$.HomeInfo.ddwRichBalance} 助力码:${$.HomeInfo.strMyShareId}`)
@@ -170,9 +181,9 @@ async function run() {
     await Pearl()
     // 牛牛任务
     await ActTask()
+
     // 日常任务、成就任务
     await UserTask()
-    await getShareCode()
   }
   catch (e) {
     console.log(e);
@@ -325,8 +336,8 @@ async function buildList(){
         let additional = `&strBuildIndex=${item.strBuildIndex}`
         let stk= `_cfd_t,bizCode,dwEnv,ptag,source,strBuildIndex,strZone`
         let GetBuildInfo = await taskGet(`user/GetBuildInfo`, stk, additional)
-        let msg = `\n[${title}] 当前等级:${item.dwLvl} 接待收入:${item.ddwOneceVistorAddCoin}/人 座位人数:${item.dwContain}`
-        if(GetBuildInfo) msg += `\n升级->需要金币:${GetBuildInfo.ddwNextLvlCostCoin} 获得财富:${GetBuildInfo.ddwLvlRich}`
+        let msg = `[${title}] 当前等级:${item.dwLvl} 接待收入:${item.ddwOneceVistorAddCoin}/人 座位人数:${item.dwContain}`
+        if(GetBuildInfo) msg += ` 升级->需要金币:${GetBuildInfo.ddwNextLvlCostCoin} 获得财富:${GetBuildInfo.ddwLvlRich}`
         console.log(msg)
         await $.wait(1000)
         if(GetBuildInfo.dwCanLvlUp > 0){
@@ -640,18 +651,27 @@ async function ActTask(){
         if(item.dwAwardStatus == 2 && item.dwCompleteNum < item.dwTargetNum && [2].includes(item.dwOrderId)){
           if(item.dwOrderId == 2){
             let b = (item.dwTargetNum-item.dwCompleteNum)
-            // 热气球接客
-            await service(b)
-            await $.wait(1000)
+            let arr = ['food','sea','shop','fun']
+            for(i=1;b--;i++){
+              let strBuildIndex = arr[Math.floor((Math.random()*arr.length))]
+              console.log(`第${i}/${b+i}次:${strBuildIndex}`)
+              let res = await taskGet(`user/SpeedUp`, '_cfd_t,bizCode,dwEnv,ptag,source,strBuildIndex,strZone', `&ptag=&strBuildIndex=fun`)
+              if(res && res.iRet == 0){
+                additional= `&strToken=${res.story.strToken}&ddwTriTime=${res.story.ddwTriTime}`
+                stk = `_cfd_t,bizCode,dwEnv,ptag,source,strBuildIndex,strZone`
+                // await taskGet(`story/QueryUserStory`, stk, additional)
+                await $.wait(1000)
+              }
+            }
             res = await taskGet(`Award1`, '_cfd_t,bizCode,dwEnv,ptag,source,strZone,taskId', `&ptag=&taskId=${item.ddwTaskId}`)
             if(res.ret == 0){
               if(res.data.prizeInfo){
                 res.data.prizeInfo = $.toObj(res.data.prizeInfo)
               }
               if(res.data.prizeInfo.ddwCoin || res.data.prizeInfo.ddwMoney){
-                console.log(`${item.taskName} 领取奖励:${res.data.prizeInfo.ddwCoin && res.data.prizeInfo.ddwCoin+'金币' || ''} ${res.data.prizeInfo.ddwMoney && res.data.prizeInfo.ddwMoney+'财富' || ''}`)
+                console.log(`${item.strTaskName} 领取奖励:${res.data.prizeInfo.ddwCoin && res.data.prizeInfo.ddwCoin+'金币' || ''} ${res.data.prizeInfo.ddwMoney && res.data.prizeInfo.ddwMoney+'财富' || ''}`)
               }else{
-                console.log(`${item.taskName} 领取奖励:`, JSON.stringify(res))
+                console.log(`${item.strTaskName} 领取奖励:`, JSON.stringify(res))
               }
             }else{
               console.log(`${item.strTaskName} 领取奖励失败:`, JSON.stringify(res))
@@ -821,7 +841,7 @@ function taskGet(type, stk, additional){
           // 1771|1771|5001|0|0,1771|75|1023|0|请刷新页面重试
           // console.log(_data)
         }
-        contents = `1771|${opId(type)}|${data.iRet || 0}|0|${data.sErrMsg || 0}`
+        contents = `1771|${opId(type)}|${data && data.iRet || 0}|0|${data && data.sErrMsg || 0}`
         await biz(contents)
       }
       catch (e) {
