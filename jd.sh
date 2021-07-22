@@ -59,7 +59,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.48"
+	cron_version="3.50"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -94,6 +94,7 @@ cat >>/etc/crontabs/root <<EOF
 0 0 * * * $node $dir_file_js/star_dreamFactory_tuan.js	>/tmp/star_dreamFactory_tuan.log	#京喜开团#100#
 0 0 * * * $python3 $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py >/tmp/jd_getFollowGift.log #关注有礼#100#
 0 8,15 * * * $python3 $dir_file/git_clone/curtinlv_script/OpenCard/jd_OpenCard.py  >/tmp/jd_OpenCard.log #开卡程序#100#
+0 1 * * * $python3 $dir_file/git_clone/curtinlv_script/jd_qjd.py >/tmp/jd_qjd.log #抢京豆#100#
 59 23 * * 0,1,2,5,6 sleep 59 && $dir_file/jd.sh run_jd_cash >/tmp/jd_cash_exchange.log	#签到领现金兑换#100#
 0 */1 * * * $dir_file/jd.sh cfd_loop #挂气球#100#
 59 23 * * * $python3 $dir_file_js/jd_blueCoin.py >/tmp/jd_blueCoin.log	#东东超市兑换#100#
@@ -208,7 +209,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_bean_change.js		#京豆变动通知(长期)
 	jd_unsubscribe.js		#取关京东店铺和商品
-
 EOF
 
 for script_name in `cat $dir_file/config/tmp/lxk0301_script.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -277,6 +277,7 @@ done
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	#gua_wealth_island.js 		#财富岛新版
+	ZooFaker_Necklace.js		#点点券依赖文件
 	jd_joy.js			#宠汪汪
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
@@ -323,14 +324,25 @@ done
 zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_jxqd.js			#京喜签到
-	jd_earn30.js                    #赚30元
-	jd_qjd.js                       #抢京豆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
 	url="$zero205_url"
 	wget $zero205_url/$script_name -O $dir_file_js/$script_name
+	update_if
+done
+
+Wenmoux_url="https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd"
+cat >$dir_file/config/tmp/Wenmoux_url.txt <<EOF
+	jd_ddnc_farmpark.js		#东东乐园 Wenmoux脚本
+	jd_mb.js			#全民摸冰
+EOF
+
+for script_name in `cat $dir_file/config/tmp/Wenmoux_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$Wenmoux_url"
+	wget $Wenmoux_url/$script_name -O $dir_file_js/$script_name
 	update_if
 done
 
@@ -350,7 +362,6 @@ cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_sign.js  			#京东签到针对图形验证码
 	jd_senbeans.js			#来客有礼
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
-	jd_ddnc_farmpark.js		#东东乐园 Wenmoux脚本
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
 	jd_all_bean_change.js 		#京东月资产变动通知
@@ -370,11 +381,8 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jddj_fruit.js			#京东到家果园 0,8,11,17
-	jddj_bean.js			#京东到家鲜豆 一天一次
-	jddj_plantBeans.js 		#京东到家鲜豆庄园脚本 一天一次
-	jddj_fruit_collectWater.js 	#京东到家果园水车收水滴 作者5分钟收一次
-	jddj_getPoints.js		#京东到家鲜豆庄园收水滴 作者5分钟收一次
+	jd_summer_movement.js		#燃动夏季
+	jd_summer_movement_help.js	#燃动夏季助力
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -638,8 +646,6 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_jin_tie.js 			#领金贴
 	jd_unsubscribe.js 		#取关店铺，没时间要求
         gua_MMdou.js                    #赚京豆MM豆
-	jd_earn30.js                    #赚30元
-	jd_qjd.js                       #抢京豆
 EOF
 	echo -e "$green run_07$start_script_time $white"
 
@@ -663,6 +669,7 @@ cat >/tmp/jd_tmp/run_08_12_16 <<EOF
 	jd_syj.js 			#赚京豆
 	jd_jump.js			#跳跳乐瓜分京豆
 	jd_ylyn.js			#伊利养牛
+	jd_mb.js			#全民摸冰
 EOF
 	echo -e "$green run_08_12_16$start_script_time $white"
 
@@ -726,10 +733,19 @@ curtinlv_script_setup() {
 		ln -s $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py  $dir_file_js/jd_getFollowGift.py
 	fi
 
+	#抢京豆
+	cat $openwrt_script_config/js_cookie.txt > $dir_file/git_clone/curtinlv_script/JDCookies.txt
+	if [ ! -L "$dir_file_js/jd_qjd.py" ]; then
+		rm -rf $dir_file_js/jd_qjd.py
+		ln -s $dir_file/git_clone/curtinlv_script/jd_qjd.py  $dir_file_js/jd_qjd.py
+	fi
+
+	#软连接
 	if [ ! -L "$dir_file_js/JDCookies.txt" ]; then
 		rm -rf $dir_file_js/JDCookies.txt
-		ln -s $dir_file/git_clone/curtinlv_script/getFollowGifts/JDCookies.txt  $dir_file_js/JDCookies.txt
+		ln -s $dir_file/git_clone/curtinlv_script/JDCookies.txt  $dir_file_js/JDCookies.txt
 	fi
+
 
 	#东东超市商品兑换
 	cp $dir_file/git_clone/curtinlv_script/jd_blueCoin.py $dir_file_js/jd_blueCoin.py

@@ -35,7 +35,7 @@ let UserName, index, isLogin, nickName;
         for (let s of shell.Data.NormShell) {
           for (let j = 0; j < s.dwNum; j++) {
             await speedUp('_cfd_t,bizCode,dwEnv,dwType,ptag,source,strZone', s.dwType)
-            await wait(3000)
+            await wait(1000)
           }
         }
       }
@@ -43,7 +43,7 @@ let UserName, index, isLogin, nickName;
       console.log(e)
       break
     }
-    await wait(30000)
+    await wait(20000)
   }
 })()
 
