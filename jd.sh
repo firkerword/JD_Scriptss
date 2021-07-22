@@ -208,7 +208,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_bean_change.js		#京豆变动通知(长期)
 	jd_unsubscribe.js		#取关京东店铺和商品
-
 EOF
 
 for script_name in `cat $dir_file/config/tmp/lxk0301_script.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -276,7 +275,11 @@ done
 
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
+	jd_summer_movement.js		#燃动夏季
+	jd_summer_movement_help.js	#燃动夏季助力
 	#gua_wealth_island.js 		#财富岛新版
+	jd_necklace.js  		#点点券
+	ZooFaker_Necklace.js		#点点券依赖文件
 	jd_joy.js			#宠汪汪
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
@@ -323,8 +326,6 @@ done
 zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_jxqd.js			#京喜签到
-	jd_earn30.js                    #赚30元
-	jd_qjd.js                       #抢京豆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -517,6 +518,8 @@ EOF
 run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_big_winner.js		#翻翻乐
+	#jd_summer_movement.js		#燃动夏季
+	#jd_summer_movement_help.js	#燃动夏季助力
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	#long_super_redrain.js		#整点红包雨
@@ -638,8 +641,6 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_jin_tie.js 			#领金贴
 	jd_unsubscribe.js 		#取关店铺，没时间要求
         gua_MMdou.js                    #赚京豆MM豆
-	jd_earn30.js                    #赚30元
-	jd_qjd.js                       #抢京豆
 EOF
 	echo -e "$green run_07$start_script_time $white"
 
