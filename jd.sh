@@ -208,8 +208,7 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_bean_change.js		#京豆变动通知(长期)
 	jd_unsubscribe.js		#取关京东店铺和商品
-	jd_earn30.js                    #赚30元
-	jd_qjd.js                       #抢京豆
+
 EOF
 
 for script_name in `cat $dir_file/config/tmp/lxk0301_script.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -324,6 +323,8 @@ done
 zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_jxqd.js			#京喜签到
+	jd_earn30.js                    #赚30元
+	jd_qjd.js                       #抢京豆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
