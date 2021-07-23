@@ -96,7 +96,6 @@ cat >>/etc/crontabs/root <<EOF
 0 8,15 * * * $python3 $dir_file/git_clone/curtinlv_script/OpenCard/jd_OpenCard.py  >/tmp/jd_OpenCard.log #开卡程序#100#
 0 1 * * * $python3 $dir_file/git_clone/curtinlv_script/jd_qjd.py >/tmp/jd_qjd.log #抢京豆#100#
 59 23 * * 0,1,2,5,6 sleep 59 && $dir_file/jd.sh run_jd_cash >/tmp/jd_cash_exchange.log	#签到领现金兑换#100#
-0 */1 * * * $dir_file/jd.sh cfd_loop #挂气球#100#
 59 23 * * * $python3 $dir_file_js/jd_blueCoin.py >/tmp/jd_blueCoin.log	#东东超市兑换#100#
 45 23 * * * $dir_file/jd.sh kill_ccr #杀掉所有并发进程，为零点准备#100#
 ###########100##########请将其他定时任务放到底下###############
@@ -357,7 +356,6 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
-	jd_cfd_loop.js 			#财富岛挂气球(杀气球运行sh \$jd kill_cfd)
 	jd_mp_h5.js			#疯狂星期五
 	jd_sign.js  			#京东签到针对图形验证码
 	jd_senbeans.js			#来客有礼
@@ -540,24 +538,17 @@ EOF
 	echo -e "$green run_01$stop_script_time $white"
 }
 
-cfd_loop() {
 kill_cfd
-cat >/tmp/jd_tmp/cfd_loop <<EOF
-	jd_cfd_loop.js			#财富岛挂气球
 EOF
-	echo -e "$green cfd_loop$start_script_time $white"
 
-	for i in `cat /tmp/jd_tmp/cfd_loop | grep -v "#.*js" | awk '{print $1}'`
 	do
 		$node $dir_file_js/$i
 		$run_sleep
 	done
 
-	echo -e "$green cfd_loop$stop_script_time $white"
 }
 
 kill_cfd() {
-	ps_cfd_if=$(ps -ww | grep "jd_cfd_loop.js" | grep -v grep | awk '{print $1}')
 	for i in `echo $ps_cfd_if`
 	do
 		kill -9 $i
@@ -898,7 +889,6 @@ kill_ccr() {
 
 if_ps() {
 	sleep 10
-	ps_if=$(ps -ww | grep "js$" | grep -v 'index.js\|jd_cfd_loop.js\|jd_try.js' | awk '{print $1}' |wc -l)
 	num1="10"
 	num2="20"
 	num3="30"
@@ -987,8 +977,6 @@ concurrent_js_if() {
 			if_ps
 			concurrent_js_clean
 		;;
-		cfd_loop)
-			action="cfd_loop"
 			concurrent_js
 		;;
 		run_01|run_02|run_045|run_08_12_16|run_020|run_10_15_20|run_06_18|run_jd_cash)
@@ -1009,8 +997,6 @@ concurrent_js_if() {
 			$action1
 			concurrent_js_run_07
 			;;
-			cfd_loop)
-				action="cfd_loop"
 				concurrent_js
 			;;
 			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
@@ -1031,8 +1017,6 @@ concurrent_js_if() {
 			$action2
 			concurrent_js_run_07
 			;;
-			cfd_loop)
-				action="cfd_loop"
 				concurrent_js
 			;;
 			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_020|run_jd_cash)
@@ -1690,7 +1674,6 @@ help() {
 	echo ""
 	echo -e "$green  sh \$jd jx $white 				#查询京喜商品生产使用时间"
 	echo ""
-	echo -e "$green  sh \$jd cfd_loop $white  			#执行财富岛挂气球（默认每一个小时运行一次）"
 	echo ""
 	echo -e "$green  sh \$jd kill_cfd $white  			#杀掉财富岛挂进程参数"
 	echo ""
@@ -2467,7 +2450,6 @@ if [[ -z $action1 ]]; then
 	help
 else
 	case "$action1" in
-		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash|cfd_loop)
 		concurrent_js_if
 		;;
 		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_cfd)
@@ -2486,7 +2468,6 @@ else
 		echo ""
 	else
 		case "$action2" in
-		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash|cfd_loop)
 		concurrent_js_if
 		;;
 		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_cfd)
