@@ -573,6 +573,7 @@ kill_cfd() {
 run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
 	#jd_joy.js		#宠汪汪
+        gua_wealth_island.js    #财富大陆
 	jd_moneyTree.js 	#摇钱树
 EOF
 	echo -e "$green run_02$start_script_time $white"
@@ -670,6 +671,7 @@ concurrent_js_run_07() {
 
 run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
+        gua_wealth_island_help.js       #财富大陆助力
 	jd_syj.js 			#赚京豆
 	jd_jump.js			#跳跳乐瓜分京豆
 	jd_ylyn.js			#伊利养牛
