@@ -490,7 +490,6 @@ run_020() {
 
 run_030() {
 cat >/tmp/jd_tmp/run_030 <<EOF
-	gua_wealth_island.js 		#财富岛新版
 	jd_jdfactory.js 		#东东工厂，不是京喜工厂
 	jd_jxmc.js			#惊喜牧场
 	jd_health_collect.js		#健康社区-收能量
