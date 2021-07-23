@@ -262,7 +262,6 @@ done
 
 panghu999_url="https://raw.githubusercontent.com/panghu999/jd_scripts/master"
 cat >$dir_file/config/tmp/panghu999_url.txt <<EOF
-	jd_necklace.js		#点点劵
 	jd_dianjing.js		#电竞经理
 EOF
 
@@ -275,7 +274,11 @@ done
 
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
-	#gua_wealth_island.js 		#财富岛新版
+	gua_wealth_island.js 		#财富大陆
+        gua_wealth_island.js            #财富大陆助力
+	jd_summer_movement.js		#燃动夏季
+	jd_summer_movement_help.js	#燃动夏季助力
+	jd_necklace.js  		#点点券
 	ZooFaker_Necklace.js		#点点券依赖文件
 	jd_joy.js			#宠汪汪
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
@@ -380,8 +383,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jd_summer_movement.js		#燃动夏季
-	jd_summer_movement_help.js	#燃动夏季助力
+        
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -524,6 +526,9 @@ EOF
 run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_big_winner.js		#翻翻乐
+	jd_summer_movement.js		#燃动夏季
+	jd_summer_movement_help.js	#燃动夏季助力
+	jd_necklace.js  		#点点券
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	#long_super_redrain.js		#整点红包雨
