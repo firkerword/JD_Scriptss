@@ -275,7 +275,7 @@ done
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_wealth_island.js 		#财富大陆
-        gua_wealth_island.js            #财富大陆助力
+        gua_wealth_island_help.js       #财富大陆助力
 	jd_summer_movement.js		#燃动夏季
 	jd_summer_movement_help.js	#燃动夏季助力
 	jd_necklace.js  		#点点券
