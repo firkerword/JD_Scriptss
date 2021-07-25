@@ -262,6 +262,7 @@ done
 
 panghu999_url="https://raw.githubusercontent.com/panghu999/jd_scripts/master"
 cat >$dir_file/config/tmp/panghu999_url.txt <<EOF
+	jd_necklace.js		#点点劵
 	jd_dianjing.js		#电竞经理
 EOF
 
@@ -274,13 +275,11 @@ done
 
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
-	gua_wealth_island.js 		#财富大陆
-        gua_wealth_island_help.js       #财富大陆助力
+	#gua_wealth_island.js 		#财富岛新版
 	jd_summer_movement.js		#燃动夏季
 	jd_summer_movement_help.js	#燃动夏季助力
 	jd_necklace.js  		#点点券
 	ZooFaker_Necklace.js		#点点券依赖文件
-	jd_joy.js			#宠汪汪
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
 EOF
@@ -325,6 +324,11 @@ done
 
 zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
+	jd_joy.js			#宠汪汪
+	JDJRValidator_Pure.js
+	jd_sign.js  			#京东签到针对图形验证码
+	sign_graphics_validate.js
+	jd_tewuZ.js			#特务Ｚ(要跑两次)
 	jd_jxqd.js			#京喜签到
 EOF
 
@@ -361,7 +365,6 @@ done
 cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_cfd_loop.js 			#财富岛挂气球(杀气球运行sh \$jd kill_cfd)
 	jd_mp_h5.js			#疯狂星期五
-	jd_sign.js  			#京东签到针对图形验证码
 	jd_senbeans.js			#来客有礼
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
@@ -383,7 +386,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-        
+
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -464,6 +467,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_joypark_task.js		#汪汪乐园每日任务
 	jd_mp_h5.js			#疯狂星期五
 	jd_twz-star.js			#特务Z行动-星小店
+	jd_tewuZ.js			#特务Ｚ(要跑两次)
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 EOF
 	echo -e "$green run_0$start_script_time $white"
@@ -490,6 +494,7 @@ run_020() {
 
 run_030() {
 cat >/tmp/jd_tmp/run_030 <<EOF
+	gua_wealth_island.js 		#财富岛新版
 	jd_jdfactory.js 		#东东工厂，不是京喜工厂
 	jd_jxmc.js			#惊喜牧场
 	jd_health_collect.js		#健康社区-收能量
@@ -527,7 +532,6 @@ cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_big_winner.js		#翻翻乐
 	jd_summer_movement.js		#燃动夏季
 	jd_summer_movement_help.js	#燃动夏季助力
-	jd_necklace.js  		#点点券
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	#long_super_redrain.js		#整点红包雨
@@ -571,8 +575,7 @@ kill_cfd() {
 
 run_02() {
 cat >/tmp/jd_tmp/run_02 <<EOF
-	#jd_joy.js		#宠汪汪
-        gua_wealth_island.js    #财富大陆
+	jd_joy.js		#宠汪汪
 	jd_moneyTree.js 	#摇钱树
 EOF
 	echo -e "$green run_02$start_script_time $white"
@@ -631,6 +634,7 @@ EOF
 
 run_07() {
 cat >/tmp/jd_tmp/run_07 <<EOF
+	jd_tewuZ.js			#特务Ｚ(要跑两次)
 	jd_jxqd.js			#京喜签到
 	jd_morningSc.js			#早起赢现金
 	adolf_superbox.js		#超级盒子
@@ -670,7 +674,6 @@ concurrent_js_run_07() {
 
 run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
-        gua_wealth_island_help.js       #财富大陆助力
 	jd_syj.js 			#赚京豆
 	jd_jump.js			#跳跳乐瓜分京豆
 	jd_ylyn.js			#伊利养牛
