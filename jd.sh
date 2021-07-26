@@ -276,8 +276,6 @@ done
 smiek2221_url="https://raw.githubusercontent.com/smiek2221/scripts/master"
 cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	#gua_wealth_island.js 		#财富岛新版
-	jd_summer_movement.js		#燃动夏季
-	jd_summer_movement_help.js	#燃动夏季助力
 	jd_necklace.js  		#点点券
 	ZooFaker_Necklace.js		#点点券依赖文件
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
@@ -385,7 +383,8 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-
+	jd_summer_movement.js		#燃动夏季
+	jd_summer_movement_help.js	#燃动夏季助力
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -531,8 +530,6 @@ EOF
 run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_big_winner.js		#翻翻乐
-	jd_summer_movement.js		#燃动夏季
-	jd_summer_movement_help.js	#燃动夏季助力
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	#long_super_redrain.js		#整点红包雨
@@ -549,7 +546,7 @@ EOF
 }
 
 kill_cfd() {
-	ps_cfd_if=$(ps -ww | grep "jd_cfd_loop.js" | grep -v grep | awk '{print $1}')
+	ps_cfd_if=$(ps -ww | grep "cfd_loop" | grep -v grep | awk '{print $1}')
 	for i in `echo $ps_cfd_if`
 	do
 		kill -9 $i
