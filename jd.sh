@@ -59,7 +59,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.52"
+	cron_version="3.53"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -350,6 +350,18 @@ do
 	update_if
 done
 
+Aaron_url="https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts"
+cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
+	jd_jxlhb.js			#京喜领红包
+EOF
+
+for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$Aaron_url"
+	wget $Aaron_url/$script_name -O $dir_file_js/$script_name
+	update_if
+done
+
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 
@@ -361,6 +373,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_diy_zeus.js			#店铺签到
 	jd_mp_h5.js			#疯狂星期五
 	jd_senbeans.js			#来客有礼
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
@@ -451,6 +464,7 @@ ccr_run() {
 
 run_0() {
 cat >/tmp/jd_tmp/run_0 <<EOF
+	jd_jxlhb.js			#京喜领红包
 	jd_mohe.js			#5G超级盲盒
 	jd_car.js 			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
@@ -468,6 +482,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_mp_h5.js			#疯狂星期五
 	jd_twz-star.js			#特务Z行动-星小店
 	jd_tewuZ.js			#特务Ｚ(要跑两次)
+	jd_diy_zeus.js			#店铺签到
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 EOF
 	echo -e "$green run_0$start_script_time $white"
