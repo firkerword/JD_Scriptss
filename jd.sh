@@ -59,7 +59,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.53"
+	cron_version="3.54"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -89,7 +89,6 @@ cat >>/etc/crontabs/root <<EOF
 #0 11 */7 * *  $node $dir_file_js/jd_price.js >/tmp/jd_price.log #每7天11点执行京东保价#100#
 0 9 28 */1 * $node $dir_file_js/jd_all_bean_change.js >/tmp/jd_all_bean_change.log #每个月28号推送当月京豆资产变化#100#
 10-20/5 10,12 * * * $node $dir_file_js/jd_live.js	>/tmp/jd_live.log #京东直播#100#
-30 20-23/1 * * * $node $dir_file_js/long_half_redrain.js	>/tmp/long_half_redrain.log	#半点红包雨#100#
 0 0,7 * * * $node $dir_file_js/jd_bean_sign.js >/tmp/jd_bean_sign.log #京东多合一签到#100#
 0 0 * * * $node $dir_file_js/star_dreamFactory_tuan.js	>/tmp/star_dreamFactory_tuan.log	#京喜开团#100#
 0 0 * * * $python3 $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py >/tmp/jd_getFollowGift.log #关注有礼#100#
@@ -195,7 +194,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_speed_redpocke.js		#极速版红包
 	jd_delCoupon.js			#删除优惠券（默认不运行，有需要手动运行）
 	jd_live.js			#京东直播
-	jd_live_redrain.js 		#超级直播间红包雨
 	jd_moneyTree.js 		#摇钱树
 	jd_market_lottery.js 		#幸运大转盘
 	jd_jin_tie.js 			#领金贴
@@ -312,6 +310,7 @@ cat >$dir_file/config/tmp/Tsukasa007_url.txt <<EOF
 	jd_joypark_open.js		#汪汪乐园开工位
 	jd_joypark_task.js		#汪汪乐园每日任务
 	jd_olympic_opencard.js		#一起奔跑 为奥运加油(一次性脚本)
+	jd_TW_buff.js			#特物-拉满BUFF 漂亮上场（没有几百个号，不用试了，默认不执行）
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Tsukasa007_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -377,7 +376,6 @@ done
 cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_diy_zeus.js			#店铺签到
 	jd_mp_h5.js			#疯狂星期五
-	jd_senbeans.js			#来客有礼
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
@@ -387,7 +385,6 @@ cat >>$dir_file/config/collect_script.txt <<EOF
 	getJDCookie.js			#扫二维码获取cookie有效时间可以90天
 	jx_products_detail.js		#京喜工厂商品列表详情
 	jd_try.js 			#京东试用（默认不启用）
-	jd_opencard.js			#开卡活动，一次性活动，运行完脚本获得53京豆，进入入口还可以开卡领30都
 	jdDreamFactoryShareCodes.js	#京喜工厂ShareCodes
 	jdFruitShareCodes.js		#东东农场ShareCodes
 	jdPetShareCodes.js		#东东萌宠ShareCodes
@@ -514,7 +511,7 @@ cat >/tmp/jd_tmp/run_030 <<EOF
 	jd_jdfactory.js 		#东东工厂，不是京喜工厂
 	jd_jxmc.js			#惊喜牧场
 	jd_health_collect.js		#健康社区-收能量
-	#long_super_redrain.js		#整点红包雨
+	long_half_redrain.js		#半点红包雨
 EOF
 	echo -e "$green run_030$start_script_time $white"
 
@@ -546,9 +543,10 @@ EOF
 run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_big_winner.js		#翻翻乐
+	jd_live_redrain.js 		#超级直播间红包雨
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
-	#long_super_redrain.js		#整点红包雨
+	long_super_redrain.js		#整点红包雨
 EOF
 	echo -e "$green run_01$start_script_time $white"
 
@@ -665,7 +663,6 @@ EOF
 
 concurrent_js_run_07() {
 	#这里的也不会并发
-	$node $openwrt_script/JD_Script/js/jd_senbeans.js			#来客有礼
 	$node $openwrt_script/JD_Script/js/jd_bean_change.js #京豆变更
 	checklog #检测log日志是否有错误并推送
 }
