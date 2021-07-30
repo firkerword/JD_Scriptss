@@ -1,13 +1,16 @@
+const UA =
+  `jdapp;android;10.0.5;11;${Math.random().toString().split('.')[1]}-5333430323261366;network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36`;
+
 const express = require('express');
 const got = require('got');
 const path = require('path');
+const QR = require('qrcode');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 const qs = require('querystring');
 /**
  * 字符串工具函数
@@ -83,7 +86,7 @@ const getCookie = (response) => {
     userCookie,
     pt_pin,
   });
-    const update_ok = `更新完成`;
+    const update_ok = `更新完成,后台自动更新你的ck，稍后自己查看`;
 
     var child = require('child_process');
     child.exec(`echo "${userCookie}" > /tmp/getcookie.txt && sh /usr/share/jd_openwrt_script/JD_Script/jd.sh addcookie && sh /usr/share/jd_openwrt_script/JD_Script/jd.sh concurrent_js_update`, function(err, sto) {
@@ -111,13 +114,12 @@ async function step1() {
       'Content-Type': 'application/x-www-form-urlencoded',
       Accept: 'application/json, text/plain, */*',
       'Accept-Language': 'zh-cn',
-      'X-Forwarded-For': '192.168.0.1',
+
       Referer:
         'https://plogin.m.jd.com/login/login?appid=300' +
         `&returnurl=https://wq.jd.com/passport/LoginRedirect?state=${timeStamp}` +
         '&returnurl=https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport',
-      'User-Agent':
-        `jdapp;android;10.0.5;11;${Date.now()}-${Date.now()};network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36`,
+      'User-Agent': UA,
       Host: 'plogin.m.jd.com',
     },
   });
@@ -161,17 +163,20 @@ async function step2(cookiesObj) {
         'https://plogin.m.jd.com/login/login?appid=300' +
         `&returnurl=https://wqlogin2.jd.com/passport/LoginRedirect?state=${timeStamp}` +
         '&returnurl=//home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport',
-      'User-Agent':
-        `jdapp;android;10.0.5;11;${Date.now()}-${Date.now()};network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36`,
+      'User-Agent': UA,
       Host: 'plogin.m.jd.com',
     },
   });
   const token = response.body.token;
+  // console.log(response.body);
+  const oneKeyLog = response.body['onekeylog_url'];
+
   const okl_token = transformKey(response.headers['set-cookie'][0]);
   const qrCodeUrl = `https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${token}`;
   return {
     ...cookiesObj,
     qrCodeUrl,
+    oneKeyLog,
     okl_token,
     token,
     cookies: `okl_token=${okl_token};` + cookies,
@@ -210,56 +215,12 @@ async function checkLogin(user) {
       Connection: 'Keep-Alive',
       'Content-Type': 'application/x-www-form-urlencoded; Charset=UTF-8',
       Accept: 'application/json, text/plain, */*',
-      'User-Agent':
-        `jdapp;android;10.0.5;11;${Date.now()}-${Date.now()};network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36`,
+      'User-Agent': UA,
     },
   });
   return response;
 }
 
-/**
- * 获取登录口令
- *
- * @param {*} url
- * @return {*} code
- */
-async function getJDCode(url) {
-  const timeStamp = new Date().getTime();
-  const getCodeUrlObj = new URL(
-    'https://api.m.jd.com/api?functionId=jCommand&appid=u&client=apple&clientVersion=8.3.6'
-  );
-  getCodeUrlObj.searchParams.set(
-    'body',
-    JSON.stringify({
-      appCode: 'jApp',
-      command: {
-        keyEndTime: timeStamp + 3 * 60 * 1000,
-        keyTitle: '【口令登录】点击->立即查看去登录',
-        url: url,
-        keyChannel: 'Wxfriends',
-        keyId: ramdomString(28),
-        sourceCode: 'jUnion',
-        keyImg:
-          'https://img14.360buyimg.com/imagetools/jfs/t1/188781/6/3393/253109/60a53002E2cd2ea37/17eabc4b8272021b.jpg',
-        keyContent: '',
-        acrossClient: '0',
-      },
-    })
-  );
-
-  const response = await got.get(getCodeUrlObj.toString(), {
-    responseType: 'json',
-    headers: {
-      'X-Forwarded-For': '192.168.0.1',
-      Host: 'api.m.jd.com',
-      accept: '*/*',
-      'accept-language': 'zh-cn',
-      'User-Agent':
-        `jdapp;android;10.0.5;11;${Date.now()}-${Date.now()};network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36`,
-    },
-  });
-  return response.body;
-}
 
 /**
  * 对ck进行处理的流程
@@ -280,28 +241,37 @@ async function cookieFlow(cookie, userMsg) {
 /**
  * API 获取二维码链接
  */
-app.get('/qrcode', function (request, response) {
-  (async () => {
-    try {
-      const cookiesObj = await step1();
-      const user = await step2(cookiesObj);
-      const getCodeBody = await getJDCode(user.qrCodeUrl);
-      response.send({
-        err: 0,
-        qrcode: user.qrCodeUrl,
-        user,
-        jdCode: getCodeBody.data,
-      });
-    } catch (err) {
-      response.send({ err: 2, msg: '错误' });
-    }
-  })();
+app.get('/qrcode', async function (request, response) {
+  try {
+    const cookiesObj = await step1();
+    const user = await step2(cookiesObj);
+    const qrCodeImg = await QR.toDataURL(user.qrCodeUrl, {
+      margin: 0,
+      width: 300,
+      scale: 0,
+    });
+    response.send({
+      err: 0,
+      qrCodeUrl: user.qrCodeUrl,
+      oneKeyLog: user.oneKeyLog,
+      qrCodeImg,
+      user,
+    });
+  } catch (err) {
+    response.send({ err: 2, msg: '错误' });
+  }
 });
+
+const sleep = (ms) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};
 
 /**
  * API 获取返回的cookie信息
  */
-app.post('/cookie', function (request, response) {
+app.post('/cookie', async function (request, response) {
   const user = request.body.user;
   const userMsg = request.body.msg;
   if (user && user.cookies != '') {
@@ -328,9 +298,13 @@ app.post('/cookie', function (request, response) {
   }
 });
 
-app.get('/', function (request, response) {
-  response.send({ code: 404 });
+// 用于修复云函数的图标显示问题
+app.get('/favicon.ico', async function (request, response) {
+  response.status(200);
+  response.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // 本地运行开启以下
 const PORT = 6789;
