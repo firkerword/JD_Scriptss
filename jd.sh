@@ -412,7 +412,8 @@ done
 		update
 	fi
 	chmod 755 $dir_file_js/*
-	kill_cfd
+	kill_index
+	index_js
 	additional_settings
 	concurrent_js_update
 	source /etc/profile
@@ -558,10 +559,11 @@ EOF
 	echo -e "$green run_01$stop_script_time $white"
 }
 
-kill_cfd() {
-	ps_cfd_if=$(ps -ww | grep "cfd_loop" | grep -v grep | awk '{print $1}')
-	for i in `echo $ps_cfd_if`
+kill_index() {
+	index_if=$(ps -ww | grep "index.js" | grep -v grep | awk '{print $1}')
+	for i in `echo $index_if`
 	do
+		echo "终止网页扫码功能，重新执行sh \$jd 就可以恢复"
 		kill -9 $i
 	done
 }
@@ -2411,7 +2413,16 @@ system_variable() {
 		#exit 0
 	fi
 
-	#后台默认运行index.js
+	index_js
+
+	#农场萌宠关闭通知
+	close_notification
+
+	script_black
+}
+
+index_js() {
+#后台默认运行index.js
 	openwrt_ip=$(ubus call network.interface.lan status | grep address  | grep -oE '([0-9]{1,3}.){3}[0-9]{1,3}')
 	index_if=$(ps -ww | grep "index.js" | grep -v grep | wc -l)
 	if [ $index_if == "1" ];then
@@ -2424,11 +2435,6 @@ system_variable() {
 			index_num="$yellow 8.网页扫码功能启动失败，请手动执行看下问题　node $dir_file/cookies_web/index.js$white"
 		fi
 	fi
-
-	#农场萌宠关闭通知
-	close_notification
-
-	script_black
 }
 
 jd_openwrt_config_description() {
@@ -2477,7 +2483,7 @@ else
 		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_cfd)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index)
 		$action1
 		;;
 		kill_ccr)
@@ -2496,7 +2502,7 @@ else
 		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_cfd)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index)
 		$action2
 		;;
 		kill_ccr)
