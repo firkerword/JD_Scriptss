@@ -325,7 +325,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_joy.js			#宠汪汪
 	JDJRValidator_Pure.js
 	sign_graphics_validate.js
-	jd_tewuZ.js			#特务Ｚ(要跑两次)
 	jd_jxqd.js			#京喜签到
 	jd_sign_graphics.js		#京东签到图形验证
 	JDJRValidator_Smiek.js
@@ -395,6 +394,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_tewuZ.js			#特务Ｚ(要跑两次)
 	jd_sign.js  			#京东签到针对图形验证码
 EOF
 
@@ -479,7 +479,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_joypark_task.js		#汪汪乐园每日任务
 	jd_mp_h5.js			#疯狂星期五
 	jd_twz-star.js			#特务Z行动-星小店
-	jd_tewuZ.js			#特务Ｚ(要跑两次)
 	jd_diy_zeus.js			#店铺签到
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 EOF
@@ -630,7 +629,6 @@ EOF
 
 run_07() {
 cat >/tmp/jd_tmp/run_07 <<EOF
-	jd_tewuZ.js			#特务Ｚ(要跑两次)
 	jd_jxqd.js			#京喜签到
 	jd_morningSc.js			#早起赢现金
 	adolf_superbox.js		#超级盒子
