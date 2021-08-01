@@ -512,6 +512,7 @@ cat >/tmp/jd_tmp/run_030 <<EOF
 	jd_jxmc.js			#惊喜牧场
 	jd_health_collect.js		#健康社区-收能量
 	long_half_redrain.js		#半点红包雨
+	jd_dreamFactory.js 		#京喜工厂
 EOF
 	echo -e "$green run_030$start_script_time $white"
 
@@ -663,6 +664,7 @@ EOF
 
 concurrent_js_run_07() {
 	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js #京喜工厂
 	$node $openwrt_script/JD_Script/js/jd_bean_change.js #京豆变更
 	checklog #检测log日志是否有错误并推送
 }
@@ -984,7 +986,6 @@ concurrent_js_if() {
 			run_03
 		;;
 		run_030)
-			$node $dir_file_js/jd_dreamFactory.js #京喜工厂
 			action="$action1"
 			concurrent_js
 			if_ps
