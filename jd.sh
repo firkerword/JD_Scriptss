@@ -680,6 +680,8 @@ run_10_15_20() {
 cat >/tmp/jd_tmp/run_10_15_20 <<EOF
 	jd_superMarket.js 		#东东超市,0 10 15 20四场补货加劵
 	jd_joy_park_help.js 		#汪汪乐园助力
+	jd_speed_sign.js 		#京东极速版签到+赚现金任务
+	jd_speed_redpocke.js		#极速版红包
 EOF
 
 	echo -e "$green run_10_15_20$start_script_time $white"
