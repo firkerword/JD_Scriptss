@@ -279,6 +279,9 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
         gua_MMdou.js                    #赚京豆MM豆
 	gua_opencard4.js		#大牌联合 冰爽一夏(默认不跑自己运行)
 	gua_opencard5.js		#冰爽夏日 钜惠送好礼(默认不跑自己运行)
+	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
+	sign_graphics_validate.js
+	
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -325,7 +328,7 @@ zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_joy.js			#宠汪汪
 	JDJRValidator_Pure.js
-	sign_graphics_validate.js
+	#sign_graphics_validate.js
 	jd_sign_graphics.js		#京东签到图形验证
 	JDJRValidator_Smiek.js
 	jd_dpqd.js			#店铺签到
