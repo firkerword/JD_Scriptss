@@ -166,7 +166,6 @@ rm -rf $dir_file/config/tmp/*
 
 #lxk0301
 cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
-	jd_bean_sign.js			#京东多合一签到
 	jd_fruit.js			#东东农场
 	jd_jxnc.js			#京喜农场
 	jd_pet.js			#东东萌宠
@@ -329,6 +328,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_sign_graphics.js		#京东签到图形验证
 	JDJRValidator_Smiek.js
 	jd_dpqd.js			#店铺签到
+	jd_bean_sign.js			#京东多合一签到
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
