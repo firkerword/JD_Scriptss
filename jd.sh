@@ -249,7 +249,7 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_opencard5.js		#冰爽夏日 钜惠送好礼(默认不跑自己运行)
 	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
 	sign_graphics_validate.js
-	
+	gua_doge.js			#七夕情报局
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -499,7 +499,7 @@ EOF
 
 run_045() {
 cat >/tmp/jd_tmp/run_045 <<EOF
-	#暂无东西
+	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
 EOF
 
 	echo -e "$green run_045$start_script_time $white"
@@ -645,6 +645,7 @@ cat >/tmp/jd_tmp/run_10_15_20 <<EOF
 	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_speed_sign.js 		#京东极速版签到+赚现金任务
 	jd_speed_redpocke.js		#极速版红包
+	gua_doge.js			#七夕情报局
 EOF
 
 	echo -e "$green run_10_15_20$start_script_time $white"
