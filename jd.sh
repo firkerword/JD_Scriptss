@@ -59,7 +59,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.54"
+	cron_version="3.55"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -86,7 +86,6 @@ cat >>/etc/crontabs/root <<EOF
 00 12,22 * * * $dir_file/jd.sh update_script that_day >/tmp/jd_update_script.log 2>&1 #22点更新JD_Script脚本#100#
 00 10 */7 * * $dir_file/jd.sh check_cookie_push >/tmp/check_cookie_push.log 2>&1 #每个7天推送cookie相关信息#100#
 5 11,19,22 * * * $dir_file/jd.sh update >/tmp/jd_update.log 2>&1 && source /etc/profile #9,11,19,22点05分更新lxk0301脚本#100#
-#0 11 */7 * *  $node $dir_file_js/jd_price.js >/tmp/jd_price.log #每7天11点执行京东保价#100#
 0 9 28 */1 * $node $dir_file_js/jd_all_bean_change.js >/tmp/jd_all_bean_change.log #每个月28号推送当月京豆资产变化#100#
 10-20/5 10,12 * * * $node $dir_file_js/jd_live.js	>/tmp/jd_live.log #京东直播#100#
 0 0,7 * * * $node $dir_file_js/jd_bean_sign.js >/tmp/jd_bean_sign.log #京东多合一签到#100#
@@ -177,7 +176,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_club_lottery.js		#摇京豆
 	jd_shop.js			#进店领豆
 	jd_bean_home.js			#领京豆额外奖励
-	jd_rankingList.js		#京东排行榜签到得京豆
 	jd_cash.js			#签到领现金，每日2毛～5毛长期
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_syj.js			#赚京豆
@@ -188,7 +186,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_daily_egg.js 		#京东金融-天天提鹅
 	jd_sgmh.js			#闪购盲盒长期活动
 	jd_ms.js			#京东秒秒币
-	jd_price.js			#京东保价
 	jd_speed_sign.js		#京东极速版签到+赚现金任务
 	jd_speed_redpocke.js		#极速版红包
 	jd_delCoupon.js			#删除优惠券（默认不运行，有需要手动运行）
@@ -198,10 +195,10 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_jin_tie.js 			#领金贴
 	jd_health.js			#健康社区
 	jd_health_collect.js		#健康社区-收能量
-	jd_jump.js			#跳跳乐瓜分京豆
 	jd_gold_creator.js		#金榜创造营
 	jd_mohe.js			#5G超级盲盒
 	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
+	jd_cleancart.js			#清空购物车（默认不执行）
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_bean_change.js		#京豆变动通知(长期)
 	jd_unsubscribe.js		#取关京东店铺和商品
@@ -239,34 +236,6 @@ for script_name in `cat $dir_file/config/tmp/longzhuzhu_qx.txt | grep -v "#.*js"
 do
 	url="$longzhuzhu_url"
 	#wget $nianyuguai_url/$script_name -O $dir_file_js/$script_name
-	#update_if
-done
-
-panghu999="https://raw.githubusercontent.com/panghu999/panghu/master"
-cat >$dir_file/config/tmp/panghu999.txt <<EOF
-	#jd_opencard2.js		#柠檬一次性开卡
-	#jd_lsj.js		#柠檬京东零食街
-	#jd_twz-star.js		#特务Z行动-星小店
-	#jd_ylyn.js		#伊利养牛
-EOF
-
-for script_name in `cat $dir_file/config/tmp/panghu999.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	url="$panghu999"
-	#wget $panghu999/$script_name -O $dir_file_js/$script_name
-	#update_if
-done
-
-panghu999_url="https://raw.githubusercontent.com/panghu999/jd_scripts/master"
-cat >$dir_file/config/tmp/panghu999_url.txt <<EOF
-	#jd_necklace.js		#点点劵
-	#jd_dianjing.js		#电竞经理
-EOF
-
-for script_name in `cat $dir_file/config/tmp/panghu999_url.txt | grep -v "#.*js" | awk '{print $1}'`
-do
-	url="$panghu999_url"
-	#wget $panghu999_url/$script_name -O $dir_file_js/$script_name
 	#update_if
 done
 
@@ -333,6 +302,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	JDJRValidator_Smiek.js
 	jd_dpqd.js			#店铺签到
 	jd_bean_sign.js			#京东多合一签到
+	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -385,7 +355,6 @@ cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
 	jd_all_bean_change.js 		#京东月资产变动通知
-	adolf_superbox.js		#超级盒子
 	jd_check_cookie.js		#检测cookie是否存活（暂时不能看到还有几天到期）
 	getJDCookie.js			#扫二维码获取cookie有效时间可以90天
 	jx_products_detail.js		#京喜工厂商品列表详情
@@ -400,15 +369,9 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jd_TW_buff.js			#特物-拉满BUFF 漂亮上场（没有几百个号，不用试了，默认不执行）
-	jd_jxqd.js			#京喜签到
-	jd_dianjing.js		#电竞经理
-	jd_opencard2.js		#柠檬一次性开卡
-	jd_lsj.js		#柠檬京东零食街
-	jd_twz-star.js		#特务Z行动-星小店
-	jd_ylyn.js		#伊利养牛
-	jd_tewuZ.js			#特务Ｚ(要跑两次)
-	jd_sign.js  			#京东签到针对图形验证码
+	adolf_superbox.js		#超级盒子
+	jd_jump.js			#跳跳乐瓜分京豆
+	jd_price.js			#京东保价
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -486,7 +449,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_market_lottery.js 		#幸运大转盘
 	jd_jin_tie.js 			#领金贴
 	jd_dreamFactory.js 		#京喜工厂
-	adolf_superbox.js		#超级盒子
 	jd_ddnc_farmpark.js		#东东乐园
 	jd_sign_graphics.js		#京东签到图形验证
 	jd_joypark_task.js		#汪汪乐园每日任务
@@ -539,7 +501,7 @@ EOF
 
 run_045() {
 cat >/tmp/jd_tmp/run_045 <<EOF
-	jd_opencard2.js		#柠檬一次性开卡
+	#暂无东西
 EOF
 
 	echo -e "$green run_045$start_script_time $white"
@@ -633,10 +595,7 @@ EOF
 run_07() {
 cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_morningSc.js			#早起赢现金
-	adolf_superbox.js		#超级盒子
-	jd_lsj.js			#柠檬京东零食街
 	jd_ddnc_farmpark.js		#东东乐园
-	jd_rankingList.js 		#京东排行榜签到领京豆
 	jd_kd.js 			#京东快递签到 一天运行一次即可
 	jd_bean_home.js 		#领京豆额外奖励
 	jd_club_lottery.js 		#摇京豆，没时间要求
@@ -671,7 +630,6 @@ concurrent_js_run_07() {
 run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
 	jd_syj.js 			#赚京豆
-	jd_jump.js			#跳跳乐瓜分京豆
 	jd_mb.js			#全民摸冰
 EOF
 	echo -e "$green run_08_12_16$start_script_time $white"
