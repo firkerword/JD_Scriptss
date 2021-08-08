@@ -327,6 +327,7 @@ done
 Aaron_url="https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts"
 cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_jxlhb.js			#京喜领红包
+	jd_nzmh.js			#新一期女装盲盒
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -578,6 +579,7 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_superMarket.js 		#东东超市,6点 18点多加两场用于收金币
 	jd_gold_creator.js		#金榜创造营
 	jd_goodMorning.js		#早起福利
+	jd_nzmh.js			#新一期女装盲盒
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
