@@ -246,6 +246,7 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_opencard4.js		#大牌联合 冰爽一夏(默认不跑自己运行)
 	gua_opencard5.js		#冰爽夏日 钜惠送好礼(默认不跑自己运行)
 	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
+	gua_opencard7.js		#七夕会员福利社(默认不跑自己运行)
 	sign_graphics_validate.js
 	gua_doge.js			#七夕情报局
 EOF
@@ -327,6 +328,7 @@ Aaron_url="https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts"
 cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_jxlhb.js			#京喜领红包
 	jd_nzmh.js			#新一期女装盲盒
+	jd_mohe.js			#5G超级盲盒
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -339,6 +341,7 @@ done
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://gitee.com/SuperManito/scripts/raw/master/jd_superBrand.js -O $dir_file_js/jd_superBrand.js #特物Z花西子(一次性,默认不执行)
+	wget https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/jd_ryhxj.js -O $dir_file_js/jd_ryhxj.js #荣耀焕新季
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -369,7 +372,6 @@ EOF
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
 	jd_mb.js			#全民摸冰
-	jd_mohe.js			#5G超级盲盒
 	adolf_superbox.js		#超级盒子
 	jd_jump.js			#跳跳乐瓜分京豆
 	jd_price.js			#京东保价
@@ -501,6 +503,7 @@ EOF
 run_045() {
 cat >/tmp/jd_tmp/run_045 <<EOF
 	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
+	gua_opencard7.js		#七夕会员福利社(默认不跑自己运行)
 EOF
 
 	echo -e "$green run_045$start_script_time $white"
@@ -556,6 +559,7 @@ cat >/tmp/jd_tmp/run_03 <<EOF
 	jd_necklace.js  		#点点券 大佬0,20领一次先扔这里后面再改
 	jd_speed.js 			#天天加速 3小时运行一次，打卡时间间隔是6小时
 	jd_health.js			#健康社区
+	jd_mohe.js			#5G超级盲盒
 EOF
 	echo -e "$green run_03$start_script_time $white"
 
@@ -579,6 +583,7 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_gold_creator.js		#金榜创造营
 	jd_goodMorning.js		#早起福利
 	jd_nzmh.js			#新一期女装盲盒
+	jd_ryhxj.js 			#荣耀焕新季
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
