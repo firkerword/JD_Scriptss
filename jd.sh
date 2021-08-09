@@ -335,11 +335,22 @@ do
 	update_if
 done
 
+yuannian1112_url="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main"
+cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
+	jd_ryhxj.js			#荣耀焕新季
+	jd_plantBean.js			#种豆得豆
+EOF
+
+for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
+do
+	url="$yuannian1112_url"
+	wget $yuannian1112_url/$script_name -O $dir_file_js/$script_name
+	update_if
+done
+
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://gitee.com/SuperManito/scripts/raw/master/jd_superBrand.js -O $dir_file_js/jd_superBrand.js #特物Z花西子(一次性,默认不执行)
-	wget https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/jd_ryhxj.js -O $dir_file_js/jd_ryhxj.js #荣耀焕新季
-	wget https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/jd_plantBean.js -O $dir_file_js/jd_plantBean.js　#种豆得豆
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -349,8 +360,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
-	jd_plantBean.js　		#种豆得豆
-	jd_ryhxj.js 			#荣耀焕新季
+	jd_summer_movement_exchange.js	#燃动夏季红包兑换(最好今天兑换了，过时不候，手动跑)
 	jd_superBrand.js 		#特物Z花西子(一次性)
 	jd_mp_h5.js			#疯狂星期五
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
@@ -1948,6 +1958,7 @@ additional_settings() {
 	new_plantBean_set="'$new_plantBean1@$zuoyou_20190516_pb@$Javon_20201224_pb@$jidiyangguang_20190516_pb@$ashou_20210516_pb@$xiaobandeng_pb@$chiyu_pb@$random_set',"
 
 	js_amount=$(cat $openwrt_script_config/js_cookie.txt | wc -l)
+	sed -i "s/shareCodes = \[/shareCodes = \[\n/g" $dir_file_js/jd_plantBean.js
 	pb_rows=$(grep -n "shareCodes =" $dir_file_js/jd_plantBean.js | awk -F ":" '{print $1}')
 	while [[ ${js_amount} -gt 0 ]]; do
 		sed -i "$pb_rows a \ $new_plantBean_set " $dir_file_js/jd_plantBean.js
