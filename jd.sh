@@ -167,7 +167,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_fruit.js			#东东农场
 	jd_jxnc.js			#京喜农场
 	jd_pet.js			#东东萌宠
-	jd_plantBean.js			#种豆得豆
 	jd_dreamFactory.js		#京喜工厂
 	jd_jdfactory.js			#东东工厂
 	jd_car.js			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
@@ -325,6 +324,8 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_jxlhb.js			#京喜领红包
 	jd_nzmh.js			#新一期女装盲盒
 	jd_mohe.js			#5G超级盲盒
+	jd_carnivalcity.js		#手机狂欢城
+	jd_carnivalcity_help.js		#手机狂欢城内部互助
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -338,6 +339,7 @@ done
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
 	wget https://gitee.com/SuperManito/scripts/raw/master/jd_superBrand.js -O $dir_file_js/jd_superBrand.js #特物Z花西子(一次性,默认不执行)
 	wget https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/jd_ryhxj.js -O $dir_file_js/jd_ryhxj.js #荣耀焕新季
+	wget https://raw.githubusercontent.com/yuannian1112/jd_scripts/main/jd_plantBean.js -O $dir_file_js/jd_plantBean.js　#种豆得豆
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -347,6 +349,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_plantBean.js　		#种豆得豆
 	jd_ryhxj.js 			#荣耀焕新季
 	jd_superBrand.js 		#特物Z花西子(一次性)
 	jd_mp_h5.js			#疯狂星期五
@@ -437,7 +440,7 @@ ccr_run() {
 	echo ""
 	#$node $openwrt_script/JD_Script/js/jd_bean_sign.js #京东多合一签到
 	#$node $openwrt_script/JD_Script/js/jd_angryKoi.js #愤怒的锦鲤
-	$python3 $openwrt_script/JD_Script/js/jd_qjd.py
+	#$python3 $openwrt_script/JD_Script/js/jd_qjd.py
 	$node $openwrt_script/JD_Script/js/jd_angryCash.js #愤怒的现金
 }
 
@@ -585,6 +588,7 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_goodMorning.js		#早起福利
 	jd_nzmh.js			#新一期女装盲盒
 	jd_ryhxj.js 			#荣耀焕新季
+	jd_carnivalcity.js		#手机狂欢城
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
@@ -626,6 +630,7 @@ EOF
 
 concurrent_js_run_07() {
 	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js #京喜工厂
 	$node $openwrt_script/JD_Script/js/jd_bean_change.js #京豆变更
 	checklog #检测log日志是否有错误并推送
