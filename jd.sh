@@ -173,7 +173,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_car.js			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_club_lottery.js		#摇京豆
 	jd_shop.js			#进店领豆
-	jd_bean_home.js			#领京豆额外奖励
 	jd_cash.js			#签到领现金，每日2毛～5毛长期
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_syj.js			#赚京豆
@@ -280,9 +279,6 @@ cat >$dir_file/config/tmp/Tsukasa007_url.txt <<EOF
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_joypark_open.js		#汪汪乐园开工位
 	jd_joypark_task.js		#汪汪乐园每日任务
-	jd_olympic_opencard.js		#一起奔跑 为奥运加油(一次性脚本)
-	jd_opencard_Daddy.js		#8.2-8.12 奶爸盛典 爸气全开(跑完手动领取100豆,只能领一次，所以默认不执行)
-	jd_opencard_teamBean1_enc.js	#组队瓜分京豆(一次性脚本,默认不运行)
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Tsukasa007_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -351,6 +347,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_ryhxj.js 			#荣耀焕新季
 	jd_superBrand.js 		#特物Z花西子(一次性)
 	jd_mp_h5.js			#疯狂星期五
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
@@ -371,6 +368,10 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_olympic_opencard.js		#一起奔跑 为奥运加油(一次性脚本)
+	jd_opencard_Daddy.js		#8.2-8.12 奶爸盛典 爸气全开(跑完手动领取100豆,只能领一次，所以默认不执行)
+	jd_bean_home.js 		#领京豆额外奖励
+	jd_opencard_teamBean1_enc.js	#组队瓜分京豆(一次性脚本,默认不运行)
 	jd_mb.js			#全民摸冰
 	adolf_superbox.js		#超级盒子
 	jd_jump.js			#跳跳乐瓜分京豆
@@ -601,7 +602,6 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_morningSc.js			#早起赢现金
 	jd_ddnc_farmpark.js		#东东乐园
 	jd_kd.js 			#京东快递签到 一天运行一次即可
-	jd_bean_home.js 		#领京豆额外奖励
 	jd_club_lottery.js 		#摇京豆，没时间要求
 	jd_jdzz.js 			#京东赚赚长期活动
 	jd_jxnc.js 			#京喜农场
