@@ -52,6 +52,12 @@ wrap_tab="     "
 line="%0D%0A%0D%0A---%0D%0A%0D%0A"
 current_time=$(date +"%Y-%m-%d")
 by="#### 脚本仓库地址:https://github.com/firkerword/JD_Script/tree/main 核心JS采用lxk0301开源JS脚本"
+if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
+	echo >$openwrt_script_config/Checkjs_Sckey.txt
+else
+	echo >$dir_file/Checkjs_Sckey.txt
+fi
+
 if [ "$dir_file" == "/usr/share/jd_openwrt_script/JD_Script" ];then
 	SCKEY=$(grep "let SCKEY" $openwrt_script_config/sendNotify.js  | awk -F "'" '{print $2}')
 	if [ ! $SCKEY ];then
@@ -67,7 +73,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.56"
+	cron_version="3.57"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -347,6 +353,7 @@ yuannian1112_url="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main
 cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_ryhxj.js			#荣耀焕新季
 	jd_plantBean.js			#种豆得豆
+	jd_appliances.js		#家电
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -478,6 +485,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_joypark_task.js		#汪汪乐园每日任务
 	jd_mp_h5.js			#疯狂星期五
 	jd_dpqd.js			#店铺签到
+	jd_appliances.js		#家电
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 EOF
 	echo -e "$green run_0$start_script_time $white"
@@ -689,12 +697,13 @@ EOF
 }
 
 run_jd_cash() {
-cat >/tmp/jd_tmp/run_10_15_20 <<EOF
+cat >/tmp/jd_tmp/run_jd_cash <<EOF
 	jd_cash_exchange.js #领现金兑换
 EOF
-	jd_cash_num="10"
+	jd_cash_num="30"
 	while [[ ${jd_cash_num} -gt 0 ]]; do
-		$node $dir_file_js/jd_cash_exchange.js
+		$node $dir_file_js/jd_cash_exchange.js &
+		sleep 1
 		jd_cash_num=$(($jd_cash_num - 1))
 	done
 }
@@ -976,7 +985,7 @@ concurrent_js_if() {
 			if_ps
 			concurrent_js_clean
 		;;
-		run_01|run_02|run_045|run_08_12_16|run_020|run_10_15_20|run_06_18|run_jd_cash)
+		run_01|run_02|run_045|run_08_12_16|run_020|run_10_15_20|run_06_18)
 			action="$action1"
 			concurrent_js
 			if_ps
@@ -994,7 +1003,7 @@ concurrent_js_if() {
 			$action1
 			concurrent_js_run_07
 			;;
-			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
+			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_030|run_020)
 			$action1
 			;;
 		esac
@@ -1012,7 +1021,7 @@ concurrent_js_if() {
 			$action2
 			concurrent_js_run_07
 			;;
-			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_020|run_jd_cash)
+			run_01|run_06_18|run_10_15_20|run_03|run_02|run_045|run_08_12_16|run_07|run_020)
 			$action2
 			;;
 		esac
@@ -2186,6 +2195,14 @@ close_notification() {
 	#农场和东东萌宠关闭通知
 	if [ `date +%A` == "Monday" ];then
 		echo -e "$green今天周一不关闭农场萌宠通知$white"
+		case `date +%H` in
+		22|23|00|01)
+			sed -i "s/notify.sendNotify/\/\/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
+		;;
+		*)
+			sed -i "s/\/\/notify.sendNotify/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
+		;;
+		esac
 	else
 		case `date +%H` in
 		22|23|00|01)
@@ -2196,6 +2213,8 @@ close_notification() {
 			done
 			sed -i "s/jdNotify = true/jdNotify = false/g" $dir_file_js/jd_fruit.js
 			sed -i "s/jdNotify = true/jdNotify = false/g" $dir_file_js/jd_pet.js
+
+			sed -i "s/notify.sendNotify/\/\/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
 
 			echo -e "$green暂时不关闭农场和萌宠通知$white"
 		;;
@@ -2208,6 +2227,8 @@ close_notification() {
 
 			sed -i "s/jdNotify = false/jdNotify = true/g" $dir_file_js/jd_fruit.js
 			sed -i "s/jdNotify = false/jdNotify = true/g" $dir_file_js/jd_pet.js
+
+			sed -i "s/\/\/notify.sendNotify/notify.sendNotify/g" $dir_file_js/jd_cash_exchange.js
 			echo -e "$green时间大于凌晨一点开始关闭农场和萌宠通知$white"
 		;;
 		esac
@@ -2478,10 +2499,10 @@ if [[ -z $action1 ]]; then
 	help
 else
 	case "$action1" in
-		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
+		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash)
 		$action1
 		;;
 		kill_ccr)
@@ -2497,10 +2518,10 @@ else
 		echo ""
 	else
 		case "$action2" in
-		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020|run_jd_cash)
+		run_0|run_01|run_06_18|run_10_15_20|run_02|run_03|run_045|run_08_12_16|run_07|run_030|run_020)
 		concurrent_js_if
 		;;
-		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index)
+		system_variable|update|update_script|task|jx|additional_settings|jd_sharecode|ds_setup|checklog|that_day|stop_script|script_black|script_name|backnas|npm_install|checktool|concurrent_js_clean|if_ps|getcookie|addcookie|delcookie|check_cookie_push|python_install|concurrent_js_update|kill_index|run_jd_cash)
 		$action2
 		;;
 		kill_ccr)
