@@ -370,6 +370,7 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_ryhxj.js			#荣耀焕新季
 	jd_plantBean.js			#种豆得豆
 	jd_appliances.js		#家电
+	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -502,6 +503,7 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_mp_h5.js			#疯狂星期五
 	jd_dpqd.js			#店铺签到
 	jd_appliances.js		#家电
+	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 EOF
 	echo -e "$green run_0$start_script_time $white"
@@ -657,6 +659,7 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_speed_redpocke.js		#极速版红包
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
 	jd_jin_tie.js 			#领金贴
+	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_unsubscribe.js 		#取关店铺，没时间要求
         gua_MMdou.js                    #赚京豆MM豆
 EOF
