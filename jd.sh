@@ -67,6 +67,19 @@ else
 	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
 fi
 
+#企业微信
+weixinkey=$(grep "let QYWX_AM" $openwrt_script_config/sendNotify.js | awk -F "'" '{print $2}')
+#企业名
+corpid=$(echo $weixinkey | awk -F "," '{print $1}')
+#自建应用，单独的secret
+corpsecret=$(echo $weixinkey | awk -F "," '{print $2}')
+# 接收者用户名,@all 全体成员
+touser=$(echo $weixinkey | awk -F "," '{print $3}')
+#应用ID
+agentid=$(echo $weixinkey | awk -F "," '{print $4}')
+#图片id
+media_id=$(echo $weixinkey | awk -F "," '{print $5}')
+
 
 start_script_time="脚本开始运行，当前时间：`date "+%Y-%m-%d %H:%M"`"
 stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
@@ -1227,6 +1240,14 @@ check_cookie_push() {
 
 	cookie_content1=$(echo "${cookie_content}${by}" | sed "s/$wrap_tab####/####/g" )
 
+	title="JD Cookie状态"
+	content=$(echo "$cookie_content1" | sed "s/+/ /g" |sed "s/####/<b>/g" |sed "s/$line/<hr\/><\/b>/g" | sed "s/$wrap$wrap_tab$wrap$wrap_tab//g"|sed "s/$wrap$wrap_tab/<br>/g" | sed "s/$wrap/<br><br>/g")
+	link="------------------------------------------------"
+	desp=$(echo "$content" | sed "s/<hr\/><\/b>/\n$link\n/g"  | sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g")
+
+	weixin_push
+
+	read a
 	if [ ! $SCKEY ];then
 			echo "没找到Server酱key不做操作"
 	else
@@ -1239,6 +1260,39 @@ check_cookie_push() {
 			echo -e "$green 推送完成$white"
 		fi
 	fi
+}
+
+
+weixin_push() {
+current_time=$(date +%s)
+time_before=$(cat $openwrt_script_config/weixin_token.txt | awk '{print $4}')
+if [ ! $time_before ];then
+	#获取access_token
+	access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
+	sed -i "/$corpid/d" $openwrt_script_config/weixin_token.txt
+	echo "$corpid $corpsecret $access_token `date +%s`" >>$openwrt_script_config/weixin_token.txt
+	echo ">>>刷新access_token成功<<<"
+else
+	if [ $((current_time - time_before)) -gt "$expireTime" ];then
+		#获取access_token
+		access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
+		sed -i "/$corpid/d" $openwrt_script_config/weixin_token.txt
+		echo "$corpid $corpsecret $access_token `date +%s`" >>$openwrt_script_config/weixin_token.txt
+		echo ">>>刷新access_token成功<<<"
+	else
+		echo "access_token 还没有过期，继续用旧的"
+		access_token=$(cat $openwrt_script_config/weixin_token.txt | awk '{print  $3}')
+
+	fi
+fi
+
+
+
+msg_body="{\"touser\":\"$touser\",\"agentid\":$agentid,\"msgtype\":\"mpnews\",\"mpnews\":{\"articles\":[{\"title\":\"$title\",\"thumb_media_id\":\"$media_id\",\"content\":\"$content\",\"digest\":\"${desp}\"}]}}"
+
+echo "$msg_body"
+curl -s "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$access_token" -d "$msg_body"
+
 }
 
 checklog() {
