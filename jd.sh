@@ -52,34 +52,9 @@ wrap_tab="     "
 line="%0D%0A%0D%0A---%0D%0A%0D%0A"
 current_time=$(date +"%Y-%m-%d")
 by="#### 脚本仓库地址:https://github.com/firkerword/JD_Script/tree/main 核心JS采用lxk0301开源JS脚本"
-if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
-	echo >$openwrt_script_config/Checkjs_Sckey.txt
-else
-	echo >$dir_file/Checkjs_Sckey.txt
-fi
-
-if [ "$dir_file" == "/usr/share/jd_openwrt_script/JD_Script" ];then
-	SCKEY=$(grep "let SCKEY" $openwrt_script_config/sendNotify.js  | awk -F "'" '{print $2}')
-	if [ ! $SCKEY ];then
-		SCKEY=$(cat $openwrt_script_config/Checkjs_Sckey.txt)
-	fi
-else
-	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
-fi
 
 #企业微信
-weixinkey=$(grep "let QYWX_AM" $openwrt_script_config/sendNotify.js | awk -F "'" '{print $2}')
-#企业名
-corpid=$(echo $weixinkey | awk -F "," '{print $1}')
-#自建应用，单独的secret
-corpsecret=$(echo $weixinkey | awk -F "," '{print $2}')
-# 接收者用户名,@all 全体成员
-touser=$(echo $weixinkey | awk -F "," '{print $3}')
-#应用ID
-agentid=$(echo $weixinkey | awk -F "," '{print $4}')
-#图片id
-media_id=$(echo $weixinkey | awk -F "," '{print $5}')
-
+weixin_line="------------------------------------------------"
 
 start_script_time="脚本开始运行，当前时间：`date "+%Y-%m-%d %H:%M"`"
 stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
@@ -371,6 +346,7 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_plantBean.js			#种豆得豆
 	jd_appliances.js		#家电
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
+	jd_qcshj.js			#汽车生活节（不知道有啥用)
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -675,6 +651,7 @@ EOF
 
 concurrent_js_run_07() {
 	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_qcshj.js		#汽车生活节（不知道有啥用)
 	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js #京喜工厂
 	$node $openwrt_script/JD_Script/js/jd_bean_change.js #京豆变更
@@ -1241,60 +1218,133 @@ check_cookie_push() {
 
 	cookie_content=$(cat /tmp/jd_check_cookie.txt |sed "s/ /+/g"| sed "s/$/$wrap$wrap_tab/g" |  sed ':t;N;s/\n//;b t' )
 
-	cookie_content1=$(echo "${cookie_content}${by}" | sed "s/$wrap_tab####/####/g" )
+	server_content=$(echo "${cookie_content}${by}" | sed "s/$wrap_tab####/####/g" )
+
+	weixin_content_sort=$(cat /tmp/jd_check_cookie.txt |sed "s/####/<b>/g"   |sed "s/$line/<hr\/><\/b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/<br>#//g"  | sed "s/$/<br>/" |sed "s/<hr\/><\/b><br>/<hr\/><\/b>/g" |  sed ':t;N;s/\n//;b t' )
+	weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+	weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><\/b><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
 
 	title="JD Cookie状态"
-	content=$(echo "$cookie_content1" | sed "s/+/ /g" |sed "s/####/<b>/g" |sed "s/$line/<hr\/><\/b>/g" | sed "s/$wrap$wrap_tab$wrap$wrap_tab//g"|sed "s/$wrap$wrap_tab/<br>/g" | sed "s/$wrap/<br><br>/g")
-	link="------------------------------------------------"
-	desp=$(echo "$content" | sed "s/<hr\/><\/b>/\n$link\n/g"  | sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g")
-
-	weixin_push
-
-	read a
-	if [ ! $SCKEY ];then
-			echo "没找到Server酱key不做操作"
-	else
-		if [ ! $cookie_content ];then
-			echo -e "$red 推送失败$white，请检查 $openwrt_script_config/check_cookie.txt是否存在"
-		else
-			echo -e "$green开始推送Cookie状态$white"
-			curl -s "http://sc.ftqq.com/$SCKEY.send?text=JD++Cookie状态++`date +%Y-%m-%d`++`date +%H:%M`" -d "&desp=$cookie_content1" >/dev/null 2>&1
-			sleep 3
-			echo -e "$green 推送完成$white"
-		fi
-	fi
+	push_menu
 }
 
 
-weixin_push() {
-current_time=$(date +%s)
-time_before=$(cat $openwrt_script_config/weixin_token.txt | awk '{print $4}')
-if [ ! $time_before ];then
-	#获取access_token
-	access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
-	sed -i "/$corpid/d" $openwrt_script_config/weixin_token.txt
-	echo "$corpid $corpsecret $access_token `date +%s`" >>$openwrt_script_config/weixin_token.txt
-	echo ">>>刷新access_token成功<<<"
-else
-	if [ $((current_time - time_before)) -gt "$expireTime" ];then
-		#获取access_token
-		access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
-		sed -i "/$corpid/d" $openwrt_script_config/weixin_token.txt
-		echo "$corpid $corpsecret $access_token `date +%s`" >>$openwrt_script_config/weixin_token.txt
-		echo ">>>刷新access_token成功<<<"
-	else
-		echo "access_token 还没有过期，继续用旧的"
-		access_token=$(cat $openwrt_script_config/weixin_token.txt | awk '{print  $3}')
+push_menu() {
+case "$push_if" in
+		0)
+			#server酱和微信同时推送
+			server_push
+			weixin_push
+			push_if="3"
+			weixin_push
+		;;
+		1)
+			#server酱推送
+			server_push
+		;;
+		2)
+			#微信推送
+			weixin_push
+		;;
+		3)
+			#将shell模块检测推送到另外一个小程序上（举个例子，一个企业号，两个小程序，小程序１填到sendNotify.js,这样子js就会推送到哪里，小程序２填写到jd_openwrt_config这样jd.sh写的模块就会推送到小程序2
+			weixin_push
+		;;
+		*)
+			echo -e "$red填写错误，不进行推送$white"
+		;;
+	esac
 
+}
+
+server_push() {
+if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
+	echo >$openwrt_script_config/Checkjs_Sckey.txt
+else
+	echo >$dir_file/Checkjs_Sckey.txt
+fi
+
+if [ "$dir_file" == "/usr/share/jd_openwrt_script/JD_Script" ];then
+	SCKEY=$(grep "let SCKEY" $openwrt_script_config/sendNotify.js  | awk -F "'" '{print $2}')
+	if [ ! $SCKEY ];then
+		SCKEY=$(cat $openwrt_script_config/Checkjs_Sckey.txt)
+	fi
+else
+	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+fi
+
+if [ ! $SCKEY ];then
+	echo "没找到Server酱key不做操作"
+else
+	echo -e "$green server酱开始推送$title$white"
+	curl -s "http://sc.ftqq.com/$SCKEY.send?text=$title++`date +%Y-%m-%d`++`date +%H:%M`" -d "&desp=$server_content" >/dev/null 2>&1
+
+	if [[ $? -eq 0 ]]; then
+		echo -e "$green server酱推送完成$white"
+	else
+		echo -e "$red server酱推送失败。请检查报错代码$title$white"
 	fi
 fi
 
+}
+
+weixin_push() {
+current_time=$(date +%s)
+expireTime="7200"
+if [ $push_if == "3" ];then
+	weixinkey=$(grep "weixin2" $openwrt_script_config/jd_openwrt_script_config.txt | awk -F "'" '{print $2}')
+else
+	weixinkey=$(grep "let QYWX_AM" $openwrt_script_config/sendNotify.js | awk -F "'" '{print $2}')
+fi
+
+#企业名
+corpid=$(echo $weixinkey | awk -F "," '{print $1}')
+#自建应用，单独的secret
+corpsecret=$(echo $weixinkey | awk -F "," '{print $2}')
+# 接收者用户名,@all 全体成员
+touser=$(echo $weixinkey | awk -F "," '{print $3}')
+#应用ID
+agentid=$(echo $weixinkey | awk -F "," '{print $4}')
+#图片id
+media_id=$(echo $weixinkey | awk -F "," '{print $5}')
+
+weixin_file="$openwrt_script_config/weixin_token.txt"
+time_before=$(cat $weixin_file |grep "$corpsecret" | awk '{print $4}')
 
 
-msg_body="{\"touser\":\"$touser\",\"agentid\":$agentid,\"msgtype\":\"mpnews\",\"mpnews\":{\"articles\":[{\"title\":\"$title\",\"thumb_media_id\":\"$media_id\",\"content\":\"$content\",\"digest\":\"${desp}\"}]}}"
+if [ ! $time_before ];then
+	#获取access_token
+	access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
+	sed -i "/$corpsecret/d" $weixin_file
+	echo "$corpid $corpsecret $access_token `date +%s`" >> $weixin_file
+	echo ">>>刷新access_token成功<<<"
+else
+	if [ $(($current_time - $time_before)) -gt "$expireTime" ];then
+		#获取access_token
+		access_token=$(curl "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${corpid}&corpsecret=${corpsecret}" | sed "s/,/\n/g" | grep "access_token" | awk -F ":" '{print $2}' | sed "s/\"//g")
+		sed -i "/$corpsecret/d" $weixin_file
+		echo "$corpid $corpsecret $access_token `date +%s`" >>$weixin_file
+		echo ">>>刷新access_token成功<<<"
+	else
+		echo "access_token 还没有过期，继续用旧的"
+		access_token=$(cat $weixin_file |grep "$corpsecret" | awk '{print  $3}')
+	fi
+fi
 
-echo "$msg_body"
-curl -s "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$access_token" -d "$msg_body"
+if [ ! $media_id ];then
+	msg_body="{\"touser\":\"$touser\",\"agentid\":$agentid,\"msgtype\":\"text\",\"text\":{\"content\":\"$title\n$weixin_desp\"}}"
+	curl -s "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$access_token" -d "$msg_body"
+else
+	msg_body="{\"touser\":\"$touser\",\"agentid\":$agentid,\"msgtype\":\"mpnews\",\"mpnews\":{\"articles\":[{\"title\":\"$title\",\"thumb_media_id\":\"$media_id\",\"content\":\"$weixin_content\",\"digest\":\"$weixin_desp\"}]}}"
+fi
+	echo -e "$green 企业微信开始推送$title$white"
+	curl -s "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=$access_token" -d "$msg_body"
+
+	if [[ $? -eq 0 ]]; then
+		echo -e "$green 企业微信推送成功$title$white"
+	else
+		echo -e "$red 企业微信推送失败。请检查报错代码$title$white"
+	fi
 
 }
 
@@ -1328,7 +1378,7 @@ checklog() {
 	for i in `cat $log2`
 	do
 		echo "#### ${i}详细的错误" >> $log3
-		grep -E  "错误|失败|module" $i | grep -v '京东天天\|京东商城\|京东拍拍\|京东现金\|京东秒杀\|京东日历\|京东金融\|京东金贴\|金融京豆\|检测\|参加团主\|参团失败\|node_modules\|sgmodule\|无助力机会\|不可以为自己助力\|助力次数耗尽\|礼包已抢完\|限流严重\|不能去好友工厂打工啦' | sort -u >> $log3
+		grep -E  "错误|失败|module" $i | grep -v '京东天天\|京东商城\|京东拍拍\|京东现金\|京东秒杀\|京东日历\|京东金融\|京东金贴\|金融京豆\|检测\|参加团主\|参团失败\|node_modules\|sgmodule\|无助力机会\|不可以为自己助力\|助力次数耗尽\|礼包已抢完\|限流严重\|不能去好友工厂打工啦\|验证失败\|提现失败' | sort -u >> $log3
 	done
 
 	if [ $num = "no_error" ]; then
@@ -1336,22 +1386,15 @@ checklog() {
 		echo -e "$green log日志没有发现错误，一切风平浪静$white"
 		echo "**********************************************"
 	else
-		if [ ! $SCKEY ];then
-			echo "没找到Server酱key不做操作"
-		else
-			log_sort=$(cat ${log3} | sed "s/&//g" | sed "s/$/$wrap$wrap_tab$sort_log/g" |  sed ':t;N;s/\n//;b t' )
-			log_sort1=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
-			if [ ! $log_sort1 ];then
-				echo -e "$red 推送失败$white，请检查 $log3是否存在"
-			else
-				echo "**********************************************"
-				echo -e "$yellow检测$cat_log个包含错误的日志，已推送到你的接收设备$white"
-				echo "**********************************************"
-				curl -s "http://sc.ftqq.com/$SCKEY.send?text=$num" -d "&desp=${log_sort1}" >/dev/null 2>&1
-				sleep 3
-				echo -e "$green 推送完成$white"
-			fi
-		fi
+		log_sort=$(cat ${log3} | sed "s/&//g" | sed "s/$/$wrap$wrap_tab$sort_log/g" |  sed ':t;N;s/\n//;b t' )
+		server_content=$(echo "${log_sort}${by}" | sed "s/$wrap_tab####/####/g" )
+
+		weixin_content_sort=$(cat ${log3} |sed "s/}//g" | sed "s/{//g"| sed "s/####/<b>/g"   |sed "s/$line/<hr\/><\/b>/g" |sed "s/$wrap$wrap_tab/<br>/g" |sed "s/<br>#//g"  | sed "s/$/<br>/" |sed "s/<hr\/><\/b><br>/<hr\/><\/b>/g" |  sed ':t;N;s/\n//;b t' )
+		weixin_content=$(echo "$weixin_content_sort<br><b>$by")
+		weixin_desp=$(echo "$weixin_content" | sed "s/<hr\/><\/b><b>/$weixin_line\n/g" |sed "s/<hr\/><\/b>/\n$weixin_line\n/g"| sed "s/<b>/\n/g"| sed "s/<br>/\n/g" | sed "s/<br><br>/\n/g" | sed "s/#/\n/g" )
+
+		title="$num"
+		push_menu
 	fi
 
 	rm -rf $log1
@@ -2434,7 +2477,7 @@ system_variable() {
 		fi
 	fi
 
-	jd_openwrt_config_version="1.2"
+	jd_openwrt_config_version="1.3"
 	if [ "$dir_file" == "$openwrt_script/JD_Script" ];then
 		jd_openwrt_config="$openwrt_script_config/jd_openwrt_script_config.txt"
 		if [ ! -f "$jd_openwrt_config" ]; then
@@ -2460,6 +2503,8 @@ system_variable() {
 	jd_joy_feedPets=$(grep "jd_joy_feedPets" $jd_openwrt_config | awk -F "'" '{print $2}')
 	jd_joy_steal=$(grep "jd_joy_steal" $jd_openwrt_config | awk -F "'" '{print $2}')
 	jd_unsubscribe=$(grep "jd_unsubscribe" $jd_openwrt_config | awk -F "'" '{print $2}')
+	push_if=$(grep "push_if" $jd_openwrt_config | awk -F "'" '{print $2}')
+	weixin2=$(grep "weixin2" $jd_openwrt_config | awk -F "'" '{print $2}')
 
 	#添加系统变量
 	jd_script_path=$(cat /etc/profile | grep -o jd.sh | wc -l)
@@ -2529,6 +2574,15 @@ cat > $jd_openwrt_config <<EOF
 *******************************************************
 #是否启用账号并发功能（多账号考虑打开，黑了不管） yes开启 默认no
 concurrent='no'
+
+#推送方式
+0.server酱和微信同时推送   1.server酱推送     2.微信推送
+3.将shell模块检测推送到另外一个小程序上（举个例子，一个企业号，两个小程序，小程序1填到sendNotify.js,这样子js就会推送到哪里，小程序2填写到jd_openwrt_config这样jd.sh写的模块就会推送到小程序2）
+
+push_if='1'
+
+(push_if填写为3，这里就必须要填，不然无法推送，不为3,可以不填)
+weixin2=''
 
 #京东试用 yes开启  默认no
 jd_try='no'
