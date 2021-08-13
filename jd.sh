@@ -306,6 +306,8 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_bean_sign.js			#京东多合一签到
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
+	jd_superBrand.js 		#特物Z(手动跑两次就行了)
+	jd_sddd.js			#送豆得豆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -360,7 +362,6 @@ done
 
 	wget https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_all_bean_change.js -O $dir_file_js/jd_all_bean_change.js #京东月资产变动通知
 	wget https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_products_detail.js -O $dir_file_js/jx_products_detail.js #京喜工厂商品列表详情
-	wget https://gitee.com/SuperManito/scripts/raw/master/jd_superBrand.js -O $dir_file_js/jd_superBrand.js #特物Z花西子(一次性,默认不执行)
 
 #将所有文本汇总
 echo > $dir_file/config/collect_script.txt
@@ -371,7 +372,6 @@ done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_summer_movement_exchange.js	#燃动夏季红包兑换(最好今天兑换了，过时不候，手动跑)
-	jd_superBrand.js 		#特物Z花西子(一次性)
 	jd_mp_h5.js			#疯狂星期五
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
@@ -458,10 +458,8 @@ update_script() {
 
 ccr_run() {
 	echo ""
-	#$node $openwrt_script/JD_Script/js/jd_bean_sign.js #京东多合一签到
-	#$node $openwrt_script/JD_Script/js/jd_angryKoi.js #愤怒的锦鲤
-	#$python3 $openwrt_script/JD_Script/js/jd_qjd.py
 	$node $openwrt_script/JD_Script/js/jd_angryCash.js #愤怒的现金
+	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
 }
 
 run_0() {
@@ -653,6 +651,7 @@ EOF
 
 concurrent_js_run_07() {
 	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js		#汽车生活节（不知道有啥用)
 	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js #京喜工厂
