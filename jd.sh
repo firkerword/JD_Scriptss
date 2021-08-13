@@ -53,6 +53,21 @@ line="%0D%0A%0D%0A---%0D%0A%0D%0A"
 current_time=$(date +"%Y-%m-%d")
 by="#### 脚本仓库地址:https://github.com/firkerword/JD_Script/tree/main 核心JS采用lxk0301开源JS脚本"
 
+if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
+	echo >$openwrt_script_config/Checkjs_Sckey.txt
+else
+	echo >$dir_file/Checkjs_Sckey.txt
+fi
+
+if [ "$dir_file" == "/usr/share/jd_openwrt_script/JD_Script" ];then
+	SCKEY=$(grep "let SCKEY" $openwrt_script_config/sendNotify.js  | awk -F "'" '{print $2}')
+	if [ ! $SCKEY ];then
+		SCKEY=$(cat $openwrt_script_config/Checkjs_Sckey.txt)
+	fi
+else
+	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
+fi
+
 #企业微信
 weixin_line="------------------------------------------------"
 
@@ -243,17 +258,16 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	ZooFaker_Necklace.js 		#点点券依赖文件
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
-	gua_opencard4.js		#大牌联合 冰爽一夏(默认不跑自己运行)
-	gua_opencard5.js		#冰爽夏日 钜惠送好礼(默认不跑自己运行)
 	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
 	gua_opencard7.js		#七夕会员福利社(默认不跑自己运行)
 	gua_opencard8.js		#开卡(默认不跑自己运行)
 	gua_opencard9.js		#开卡(默认不跑自己运行)
 	gua_opencard10.js		#开卡(默认不跑自己运行)
-	sign_graphics_validate.js
 	gua_doge.js			#七夕情报局
 	jd_qcshj.js			#汽车生活节（不知道有啥用)
 	sign_graphics_validate.js	#gua_opencard6.js使用的，还有点豆子冲
+	gua_xiaolong.js			#8.13-8.25 骁龙品牌日
+	gua_xmGame.js			#小米-星空大冒险（一次性脚本）
 EOF
 
 for script_name in `cat $dir_file/config/tmp/smiek2221_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -351,6 +365,7 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_plantBean.js			#种豆得豆
 	jd_appliances.js		#家电
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
+	jd_decompression.js		#热血心跳,狂解压(一次两次)
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -391,14 +406,9 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_opencard_teamBean4_enc.js	#开卡默认不运行限时活动随时删除
 	jd_olympic_opencard.js		#一起奔跑 为奥运加油(一次性脚本)
 	jd_opencard_Daddy.js		#8.2-8.12 奶爸盛典 爸气全开(跑完手动领取100豆,只能领一次，所以默认不执行)
-	jd_bean_home.js 		#领京豆额外奖励
-	jd_opencard_teamBean1_enc.js	#组队瓜分京豆(一次性脚本,默认不运行)
-	jd_mb.js			#全民摸冰
-	adolf_superbox.js		#超级盒子
-	jd_jump.js			#跳跳乐瓜分京豆
-	jd_price.js			#京东保价
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -460,6 +470,8 @@ ccr_run() {
 	echo ""
 	$node $openwrt_script/JD_Script/js/jd_angryCash.js #愤怒的现金
 	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
+	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
+	$node $openwrt_script/JD_Script/js/jd_decompression.js		#热血心跳,狂解压(一次两次)
 }
 
 run_0() {
@@ -651,6 +663,8 @@ EOF
 
 concurrent_js_run_07() {
 	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_decompression.js		#热血心跳,狂解压(一次两次)
+	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
 	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js		#汽车生活节（不知道有啥用)
 	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
@@ -1259,20 +1273,6 @@ case "$push_if" in
 }
 
 server_push() {
-if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
-	echo >$openwrt_script_config/Checkjs_Sckey.txt
-else
-	echo >$dir_file/Checkjs_Sckey.txt
-fi
-
-if [ "$dir_file" == "/usr/share/jd_openwrt_script/JD_Script" ];then
-	SCKEY=$(grep "let SCKEY" $openwrt_script_config/sendNotify.js  | awk -F "'" '{print $2}')
-	if [ ! $SCKEY ];then
-		SCKEY=$(cat $openwrt_script_config/Checkjs_Sckey.txt)
-	fi
-else
-	SCKEY=$(cat $dir_file/Checkjs_Sckey.txt)
-fi
 
 if [ ! $SCKEY ];then
 	echo "没找到Server酱key不做操作"
