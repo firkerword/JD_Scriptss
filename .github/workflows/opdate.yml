@@ -33,12 +33,9 @@ jobs:
 
       - name: Push Commits
         run : |
-          cd JD_Script
           git config --global user.email "136000981@qq.com"
           git config --global user.name "firkerword"
-          export TZ='Asia/Shanghai'
-          git add . || echo "1"
-          git commit -m "github_actions" -a
+          git commit -m "Add changes" -a
 
       - name: Push changes
         uses: ad-m/github-push-action@master
