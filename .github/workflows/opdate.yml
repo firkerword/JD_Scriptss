@@ -44,6 +44,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.TOKEN }}
+          branch: "main"
           
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
