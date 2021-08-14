@@ -33,6 +33,7 @@ jobs:
 
       - name: Push Commits
         run : |
+          cd JD_Script
           git config --global user.email "136000981@qq.com"
           git config --global user.name "firkerword"
           git add . 
