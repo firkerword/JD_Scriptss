@@ -70,8 +70,10 @@ jobs:
 
           git commit -m "github_actions" -a;
 
-          git push "https://firkerword:${{ secrets.MIMA }}@github.com/firkerword/JD_Script.git" main
-
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           
 
       - name: Delete workflow runs
