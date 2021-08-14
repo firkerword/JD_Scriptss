@@ -37,7 +37,7 @@ jobs:
           git config --global user.email "136000981@qq.com"
           git config --global user.name "firkerword"
           export TZ='Asia/Shanghai'
-          git add .
+          git add . || echo "1"
           git commit -m "github_actions" -a
 
       - name: Push changes
