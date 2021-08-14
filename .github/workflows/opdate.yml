@@ -20,8 +20,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
     steps:
-
+    
       - name: Checkout
         uses: actions/checkout@main
 
@@ -38,12 +39,7 @@ jobs:
           git config --global user.name "firkerword"
           git add . 
           git commit -m "Add changes" -a
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.TOKEN }}
-          branch: "main"
+          git push "https://firkerword:${{ secrets.TOKEN }}@github.com/firkerword/JD_Script.git" main
           
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
