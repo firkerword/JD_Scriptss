@@ -35,6 +35,7 @@ jobs:
         run : |
           git config --global user.email "136000981@qq.com"
           git config --global user.name "firkerword"
+          git add . 
           git commit -m "Add changes" -a
 
       - name: Push changes
