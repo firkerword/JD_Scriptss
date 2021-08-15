@@ -266,7 +266,7 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	gua_opencard10.js		#开卡(默认不跑自己运行)
 	gua_doge.js			#七夕情报局
 	jd_qcshj.js			#汽车生活节（不知道有啥用)
-	sign_graphics_validate.js	#gua_opencard6.js使用的，还有点豆子冲
+	#sign_graphics_validate.js	#gua_opencard6.js使用的，还有点豆子冲
 	gua_xiaolong.js			#8.13-8.25 骁龙品牌日
 	gua_xmGame.js			#小米-星空大冒险（一次性脚本）
 EOF
@@ -314,10 +314,10 @@ zero205_url="https://raw.githubusercontent.com/zero205/JD_tencent_scf/main"
 cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_joy.js			#宠汪汪
 	JDJRValidator_Pure.js
-	#sign_graphics_validate.js
+	sign_graphics_validate.js
 	jd_sign_graphics.js		#京东签到图形验证
 	JDJRValidator_Smiek.js
-	jd_dpqd.js			#店铺签到
+	#jd_dpqd.js			#店铺签到
 	jd_bean_sign.js			#京东多合一签到
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
@@ -469,6 +469,7 @@ update_script() {
 
 ccr_run() {
 	echo ""
+	$node $openwrt_script/JD_Script/js/jd_jxlhb.js			#京喜领红包
 	$node $openwrt_script/JD_Script/js/jd_angryCash.js #愤怒的现金
 	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
 	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
@@ -477,7 +478,6 @@ ccr_run() {
 
 run_0() {
 cat >/tmp/jd_tmp/run_0 <<EOF
-	jd_jxlhb.js			#京喜领红包
 	jd_car.js 			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
 	jd_sgmh.js 			#闪购盲盒长期活动
