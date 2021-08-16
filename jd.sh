@@ -403,9 +403,10 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	jd_opencard_teamBean4_enc.js	#开卡默认不运行限时活动随时删除
-	jd_olympic_opencard.js		#一起奔跑 为奥运加油(一次性脚本)
-	jd_opencard_Daddy.js		#8.2-8.12 奶爸盛典 爸气全开(跑完手动领取100豆,只能领一次，所以默认不执行)
+	gua_opencard7.js		#七夕会员福利社(默认不跑自己运行)
+	gua_doge.js			#七夕情报局
+	jd_cleancart.js			#清空购物车（默认不执行）
+	jd_opencard_teamBean3_enc.js	#开卡默认不运行
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
