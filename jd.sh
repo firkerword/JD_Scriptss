@@ -360,7 +360,6 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_plantBean.js			#种豆得豆
 	jd_appliances.js		#家电
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
-	jd_decompression.js		#热血心跳,狂解压(一次两次)
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -472,7 +471,6 @@ ccr_run() {
 	$node $openwrt_script/JD_Script/js/jd_jxlhb.js			#京喜领红包
 	$node $openwrt_script/JD_Script/js/jd_angryCash.js #愤怒的现金
 	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
-	$node $openwrt_script/JD_Script/js/jd_decompression.js		#热血心跳,狂解压(一次两次)
 }
 
 run_0() {
@@ -663,7 +661,6 @@ EOF
 
 concurrent_js_run_07() {
 	#这里的也不会并发
-	$node $openwrt_script/JD_Script/js/jd_decompression.js		#热血心跳,狂解压(一次两次)
 	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
 	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js		#汽车生活节（不知道有啥用)
