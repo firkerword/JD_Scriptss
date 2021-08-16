@@ -2,7 +2,7 @@
 #
 #by:ITdesk
 #
-#Github:https://github.com/ITdesk01/JD_Script/tree/main
+#Github:https://github.com/firkerword/JD_Script/tree/main
 #
 #如果你魔改我的脚本，请魔改的彻底一点，不要留我的qq群，没时间处理一堆不用我库的人，决定魔改那就自己维护，你好我也好。
 
@@ -30,7 +30,7 @@ if [ "$dir_file" == "/usr/share/jd_openwrt_script/JD_Script" ];then
 	openwrt_script_config="/usr/share/jd_openwrt_script/script_config"
 else
 	clear
-	echo -e "$red检测到你使用本地安装方式安装脚本，不再支持本地模式！！！，请按github：https://github.com/ITdesk01/jd_openwrt_script 重新编译插件$white"
+	echo -e "$red检测到你使用本地安装方式安装脚本，不再支持本地模式！！！，请按github：https://github.com/firkerword/jd_openwrt_script 重新编译插件$white"
 	exit 0
 fi
 
@@ -51,7 +51,7 @@ wrap="%0D%0A%0D%0A" #Server酱换行
 wrap_tab="     "
 line="%0D%0A%0D%0A---%0D%0A%0D%0A"
 current_time=$(date +"%Y-%m-%d")
-by="#### 脚本仓库地址:https://github.com/ITdesk01/JD_Script/tree/main 核心JS采用lxk0301开源JS脚本"
+by="#### 脚本仓库地址:https://github.com/firkerword/JD_Script/tree/main 核心JS采用lxk0301开源JS脚本"
 
 if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
 	echo >$openwrt_script_config/Checkjs_Sckey.txt
@@ -145,7 +145,7 @@ update() {
 	if [ ! -d $dir_file/git_clone/lxk0301_back ];then
 		echo ""
 		#git clone -b master git@gitee.com:lxk0301/jd_scripts.git $dir_file/git_clone/lxk0301
-		git clone https://github.com/ITdesk01/script_back.git $dir_file/git_clone/lxk0301_back
+		git clone https://github.com/firkerword/script_back.git $dir_file/git_clone/lxk0301_back
 	else
 		cd $dir_file/git_clone/lxk0301_back
 		git fetch --all
@@ -180,7 +180,7 @@ update() {
 
 rm -rf $dir_file/config/tmp/*
 
-#lxk0301
+#lxk0301_back
 cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_fruit.js			#东东农场
 	jd_jxnc.js			#京喜农场
@@ -211,6 +211,7 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_health_collect.js		#健康社区-收能量
 	jd_gold_creator.js		#金榜创造营
 	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
+	jd_cleancart.js			#清空购物车（默认不执行）
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_bean_change.js		#京豆变动通知(长期)
 	jd_unsubscribe.js		#取关京东店铺和商品
@@ -258,9 +259,6 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	ZooFaker_Necklace.js 		#点点券依赖文件
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
-	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
-	gua_opencard8.js		#开卡(默认不跑自己运行)
-	gua_opencard9.js		#开卡(默认不跑自己运行)
 	gua_opencard10.js		#开卡(默认不跑自己运行)
 	jd_qcshj.js			#汽车生活节（不知道有啥用)
 	#sign_graphics_validate.js	#gua_opencard6.js使用的，还有点豆子冲
@@ -275,21 +273,21 @@ do
 	update_if
 done
 
-faker2_url="https://raw.githubusercontent.com/shufflewzc/faker2/main"
-cat >$dir_file/config/tmp/faker2_url.txt <<EOF
-	jd_morningSc.js			#早起赢现金
-	jd_angryCash.js			#愤怒的现金
+cdle_url="https://raw.githubusercontent.com/cdle/jd_study/main"
+cat >$dir_file/config/tmp/cdle_url.txt <<EOF
+	jd_morningSc.js		#早起赢现金
+	jd_angryCash.js		#愤怒的现金
 	jd_angryKoi.js			#愤怒的锦鲤
 	jd_goodMorning.js		#早起福利
 	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_cash_exchange.js		#签到领现金兑换
 EOF
 
-for script_name in `cat $dir_file/config/tmp/faker2_url.txt | grep -v "#.*js" | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/cdle_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
-	url="$faker2_url"
-	wget $faker2_url/$script_name -O $dir_file_js/$script_name
-	update_if
+	url="$cdle_url"
+	#wget $cdle_url/$script_name -O $dir_file_js/$script_name
+	#update_if
 done
 
 Tsukasa007_url="https://raw.githubusercontent.com/Tsukasa007/my_script/master"
@@ -403,10 +401,15 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	gua_opencard7.js		#七夕会员福利社(默认不跑自己运行)
+	gua_opencard8.js		#开卡(默认不跑自己运行)
+	gua_opencard9.js		#开卡(默认不跑自己运行)
+	gua_opencard6.js                #七夕告白季-开卡(默认不跑自己运行)
+	gua_opencard7.js                #七夕会员福利社(默认不跑自己运行)
 	gua_doge.js			#七夕情报局
-	jd_cleancart.js			#清空购物车（默认不执行）
 	jd_opencard_teamBean3_enc.js	#开卡默认不运行
+	jd_opencard_teamBean4_enc.js	#开卡默认不运行限时活动随时删除
+	jd_olympic_opencard.js		#一起奔跑 为奥运加油(一次性脚本)
+	jd_opencard_Daddy.js		#8.2-8.12 奶爸盛典 爸气全开(跑完手动领取100豆,只能领一次，所以默认不执行)
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -468,7 +471,6 @@ ccr_run() {
 	echo ""
 	$node $openwrt_script/JD_Script/js/jd_jxlhb.js			#京喜领红包
 	$node $openwrt_script/JD_Script/js/jd_angryCash.js #愤怒的现金
-	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
 	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
 	$node $openwrt_script/JD_Script/js/jd_decompression.js		#热血心跳,狂解压(一次两次)
 }
@@ -666,6 +668,7 @@ concurrent_js_run_07() {
 	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js		#汽车生活节（不知道有啥用)
 	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
+	$node $openwrt_script/JD_Script/js/jd_jxlhb.js			#京喜领红包
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js #京喜工厂
 	$node $openwrt_script/JD_Script/js/jd_bean_change.js #京豆变更
 	checklog #检测log日志是否有错误并推送
@@ -692,7 +695,6 @@ cat >/tmp/jd_tmp/run_10_15_20 <<EOF
 	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_speed_sign.js 		#京东极速版签到+赚现金任务
 	jd_speed_redpocke.js		#极速版红包
-	gua_doge.js			#七夕情报局
 EOF
 
 	echo -e "$green run_10_15_20$start_script_time $white"
@@ -1205,8 +1207,10 @@ delcookie() {
 check_cooike() {
 #将cookie获取时间导入文本
 	if [ ! -f $openwrt_script_config/check_cookie.txt  ];then
-		echo "Cookie             添加时间      预计到期时间(不保证百分百准确)" > $openwrt_script_config/check_cookie.txt
+		echo "备注      Cookie             添加时间      预计到期时间(不保证百分百准确)" > $openwrt_script_config/check_cookie.txt
 	fi
+	sed -i "/添加时间/d" $openwrt_script_config/check_cookie.txt
+	sed -i "1i\备注      Cookie             添加时间      预计到期时间(不保证百分百准确)" $openwrt_script_config/check_cookie.txt
 	Current_date=$(date +%Y-%m-%d)
 	Current_date_m=$(echo $Current_date | awk -F "-" '{print $2}')
 	if [ "$Current_date_m" == "12"  ];then
@@ -1217,7 +1221,8 @@ check_cooike() {
 		#$这个不要改动，没有写错
 	fi
 	sed -i "/$pt_pin/d" $openwrt_script_config/check_cookie.txt
-	echo "$pt_pin   $Current_date      $Expiration_date" >> $openwrt_script_config/check_cookie.txt
+	remark=$(grep "$pt_pin" $openwrt_script_config/jdCookie.js | awk -F "//" '{print $2}')
+	echo "$remark      $pt_pin   $Current_date      $Expiration_date" >> $openwrt_script_config/check_cookie.txt
 }
 
 check_cookie_push() {
@@ -1920,8 +1925,14 @@ additional_settings() {
 
 	#小草
 	xiacao_20210102_fr="3aaa13bec82041d59e566d35cebb3bc9@cdbbe169f8d04263a635d694f528f6ed"
+
+	#法外狂徒张三
+	fwkgzs_20210522_fr= "0133373a5e7a4468883abfe2332c9ca9@6432a076b39a4fcb8c52d9ed2c223e4d"
+
+	#屌大话事
+	ddhs_20210603_fr= "f3b80f8d7c8d46e0a635567a2c39289b"
 	
-	random_fruit="$dreamer_20200524_fr@$adong_20201108_fr@$whiteboy__20190711_fr@$wuliao_20210214_fr@$tanherongyi_20210121_fr@$wjq_20190516_fr@$NanshanFox_20210303_fr@$Lili_20210121_fr@$jisi_20201211_fr@$Luckies_20210205_fr@$yushengyigelang_2021017_fr@$youxizhenhaowan_20201229_fr@$zuoyou_random_fr@$superbei666_20201124_fr@$cainiao5_20201209_fr@$xiacao_20210102_fr"
+	random_fruit="$dreamer_20200524_fr@$adong_20201108_fr@$whiteboy__20190711_fr@$wuliao_20210214_fr@$tanherongyi_20210121_fr@$wjq_20190516_fr@$NanshanFox_20210303_fr@$Lili_20210121_fr@$jisi_20201211_fr@$Luckies_20210205_fr@$yushengyigelang_2021017_fr@$youxizhenhaowan_20201229_fr@$zuoyou_random_fr@$superbei666_20201124_fr@$cainiao5_20201209_fr@$xiacao_20210102_fr@$fwkgzs_20210522_fr@$ddhs_20210603_fr"
 	random="$random_fruit"
 	random_array
 	new_fruit_set="'$new_fruit1@$zuoyou_20190516_fr@$Javon_20201224_fr@$jidiyangguang_20190516_fr@$ashou_20210516_fr@$xiaodengzi_20190516_fr@$xiaobandeng_fr@$chiyu_fr@$random_set',"
@@ -1996,8 +2007,14 @@ additional_settings() {
 	
 	#小草
 	xiaocao_20210102_pet="MTE1NDQ5MzYwMDAwMDAwNDI4MjM0OTE=@MTE1NDQ5OTIwMDAwMDAwNDM3NTg4ODk="
+
+	#法外狂徒张三
+	fwktzs_20210522_pet= "MTAxNzIxMDc1MTAwMDAwMDA1MTAwNzg3NQ==@MTEyNzEzMjc0MDAwMDAwMDUyOTc0MTc3"
+
+	#屌大话事
+	ddhs_20210603_pet= "MTAxODcxOTI2NTAwMDAwMDAzMTE4MDQzOQ=="
 	
-	random_pet="$dreamer_20200524_pet@$adong_20201108_pet@$whiteboy_20190711_pet@$wuliao_20210214_pet@$tanherongyi_20210121_pet@$wjq_20190516_pet@$NanshanFox_20210303_pet@$Lili_20210121_pet@$jisi_20201211_pet@$Luckies_20210205_pet@$yushengyigelang_2021017_pet@$youxizhenhaowan_20201229_pet@$zuoyou_random_pet@$superbei666_20201124_pet@$cainiao5_20201209_pet@$xiaocao_20210102_pet"
+	random_pet="$dreamer_20200524_pet@$adong_20201108_pet@$whiteboy_20190711_pet@$wuliao_20210214_pet@$tanherongyi_20210121_pet@$wjq_20190516_pet@$NanshanFox_20210303_pet@$Lili_20210121_pet@$jisi_20201211_pet@$Luckies_20210205_pet@$yushengyigelang_2021017_pet@$youxizhenhaowan_20201229_pet@$zuoyou_random_pet@$superbei666_20201124_pet@$cainiao5_20201209_pet@$xiaocao_20210102_pet@$fwktzs_20210522_pet@$ddhs_20210603_pet"
 	random="$random_pet"
 	random_array
 	new_pet_set="'$new_pet1@$zuoyou_20190516_pet@$Javon_20201224_pet@$jidiyangguang_20190516_pet@$ashou_20210516_pet@$Jhone_Potte_20200824_pet@$chiyu_pet@$random_set',"
@@ -2070,8 +2087,14 @@ additional_settings() {
 	
 	#小草
 	xiaocao_20210102_pb="pmvt25o5pxfjzjmrc7fubka5hu3h7wlwy7o5jii@tnmcphpjys5id33ymb3hnv67vtcdorfs7bmxuvi"
+
+	#法外狂徒张三
+	fwktzs_20210522_pb="mxh3f6mj6bnp47rr4hzvgjspdq@e7lhibzb3zek3f5jlesp7a3pdgvl6iuxhp42riy"
+
+	#屌大话事
+	ddhs_20210603_pb="mlrdw3aw26j3xltrtksfk72uf334zcoz5oy57jq"
 	
-	random_plantBean="$dreamer_20200524_pb@$adong_20201108_pb@$whiteboy_20190711_pd@$wuliao_20210214_pb@$tanherongyi_20210121_pb@$wjq_20190516_pb@$NanshanFox_20210303_pb@$Lili_20210121_pb@$jisi_20201211_pb@$Luckies_20210205_pb@$yushengyigelang_2021017_pb@$youxizhenhaowan_20201229_pb@$zuoyou_random_pb@$superbei666_20201124_pb@$cainiao5_20201209_pb@$xiaocao_20210102_pb"
+	random_plantBean="$dreamer_20200524_pb@$adong_20201108_pb@$whiteboy_20190711_pd@$wuliao_20210214_pb@$tanherongyi_20210121_pb@$wjq_20190516_pb@$NanshanFox_20210303_pb@$Lili_20210121_pb@$jisi_20201211_pb@$Luckies_20210205_pb@$yushengyigelang_2021017_pb@$youxizhenhaowan_20201229_pb@$zuoyou_random_pb@$superbei666_20201124_pb@$cainiao5_20201209_pb@$xiaocao_20210102_pb@$fwktzs_20210522_pb@$ddhs_20210603_pb"
 	random="$random_plantBean"
 	random_array
 	new_plantBean_set="'$new_plantBean1@$zuoyou_20190516_pb@$Javon_20201224_pb@$jidiyangguang_20190516_pb@$ashou_20210516_pb@$xiaobandeng_pb@$chiyu_pb@$random_set',"
@@ -2143,8 +2166,14 @@ additional_settings() {
 	
 	#小草
 	xiaocao_20210102_df="Y1heEn9Iva97i-IjTtfI9Q==@IRwRnh7xAVI3o4zLblOYJQ=="
+
+	#法外狂徒张三
+	fwktzs_20210522_df= "UmqlLQlSpQE90M5gY5sGZw==@oUhF8gTDEJzTkR53wXONqg=="
+
+	#屌大话事
+	ddhs_20210603_df= "3my4yYrvmmvshRRBiJ-Ctg=="
 	
-	random_dreamFactory="$test_df@$dreamer_20200524_df@$adong_20201108_df@$whiteboy__20190711_df@$wuliao_20210214_df@$tanherongyi_20210121_df@$wjq_20190516_df@$NanshanFox_20210303_df@$Lili_20210121_df@$jisi_20201211_df@$yushengyigelang_2021017_df@$youxizhenhaowan_20201229_df@$zuoyou_random_df@$superbei666_20201124_df@$cainiao5_20201209_df@$xiaocao_20210102_df"
+	random_dreamFactory="$test_df@$dreamer_20200524_df@$adong_20201108_df@$whiteboy__20190711_df@$wuliao_20210214_df@$tanherongyi_20210121_df@$wjq_20190516_df@$NanshanFox_20210303_df@$Lili_20210121_df@$jisi_20201211_df@$yushengyigelang_2021017_df@$youxizhenhaowan_20201229_df@$zuoyou_random_df@$superbei666_20201124_df@$cainiao5_20201209_df@$xiaocao_20210102_df@$fwktzs_20210522_df@$ddhs_20210603_df"
 	random="$random_dreamFactory"
 	random_array
 	new_dreamFactory_set="'$new_dreamFactory@$zuoyou_20190516_df@$Javon_20201224_df@$jidiyangguang_20190516_df@$ashou_20210516_df@$Jhone_Potte_20200824_df@$chiyu_df@$random_set',"
