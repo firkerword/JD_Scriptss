@@ -2,7 +2,7 @@
 #
 #by:ITdesk
 #
-#Github:https://github.com/firkerword/JD_Script/tree/main
+#Github:https://github.com/ITdesk01/JD_Script/tree/main
 #
 #如果你魔改我的脚本，请魔改的彻底一点，不要留我的qq群，没时间处理一堆不用我库的人，决定魔改那就自己维护，你好我也好。
 
@@ -30,7 +30,7 @@ if [ "$dir_file" == "/usr/share/jd_openwrt_script/JD_Script" ];then
 	openwrt_script_config="/usr/share/jd_openwrt_script/script_config"
 else
 	clear
-	echo -e "$red检测到你使用本地安装方式安装脚本，不再支持本地模式！！！，请按github：https://github.com/firkerword/jd_openwrt_script 重新编译插件$white"
+	echo -e "$red检测到你使用本地安装方式安装脚本，不再支持本地模式！！！，请按github：https://github.com/ITdesk01/jd_openwrt_script 重新编译插件$white"
 	exit 0
 fi
 
@@ -51,7 +51,7 @@ wrap="%0D%0A%0D%0A" #Server酱换行
 wrap_tab="     "
 line="%0D%0A%0D%0A---%0D%0A%0D%0A"
 current_time=$(date +"%Y-%m-%d")
-by="#### 脚本仓库地址:https://github.com/firkerword/JD_Script/tree/main 核心JS采用lxk0301开源JS脚本"
+by="#### 脚本仓库地址:https://github.com/ITdesk01/JD_Script/tree/main 核心JS采用lxk0301开源JS脚本"
 
 if [ ! -f $openwrt_script_config/Checkjs_Sckey.txt ];then
 	echo >$openwrt_script_config/Checkjs_Sckey.txt
@@ -145,7 +145,7 @@ update() {
 	if [ ! -d $dir_file/git_clone/lxk0301_back ];then
 		echo ""
 		#git clone -b master git@gitee.com:lxk0301/jd_scripts.git $dir_file/git_clone/lxk0301
-		git clone https://github.com/firkerword/script_back.git $dir_file/git_clone/lxk0301_back
+		git clone https://github.com/ITdesk01/script_back.git $dir_file/git_clone/lxk0301_back
 	else
 		cd $dir_file/git_clone/lxk0301_back
 		git fetch --all
@@ -211,7 +211,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_health_collect.js		#健康社区-收能量
 	jd_gold_creator.js		#金榜创造营
 	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
-	jd_cleancart.js			#清空购物车（默认不执行）
 	jd_get_share_code.js		#获取jd所有助力码脚本
 	jd_bean_change.js		#京豆变动通知(长期)
 	jd_unsubscribe.js		#取关京东店铺和商品
@@ -260,11 +259,9 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
 	gua_opencard6.js		#七夕告白季-开卡(默认不跑自己运行)
-	gua_opencard7.js		#七夕会员福利社(默认不跑自己运行)
 	gua_opencard8.js		#开卡(默认不跑自己运行)
 	gua_opencard9.js		#开卡(默认不跑自己运行)
 	gua_opencard10.js		#开卡(默认不跑自己运行)
-	gua_doge.js			#七夕情报局
 	jd_qcshj.js			#汽车生活节（不知道有啥用)
 	#sign_graphics_validate.js	#gua_opencard6.js使用的，还有点豆子冲
 	gua_xiaolong.js			#8.13-8.25 骁龙品牌日
@@ -278,8 +275,8 @@ do
 	update_if
 done
 
-cdle_url="https://raw.githubusercontent.com/cdle/jd_study/main"
-cat >$dir_file/config/tmp/cdle_url.txt <<EOF
+faker2_url="https://raw.githubusercontent.com/shufflewzc/faker2/main"
+cat >$dir_file/config/tmp/faker2_url.txt <<EOF
 	jd_morningSc.js			#早起赢现金
 	jd_angryCash.js			#愤怒的现金
 	jd_angryKoi.js			#愤怒的锦鲤
@@ -288,10 +285,10 @@ cat >$dir_file/config/tmp/cdle_url.txt <<EOF
 	jd_cash_exchange.js		#签到领现金兑换
 EOF
 
-for script_name in `cat $dir_file/config/tmp/cdle_url.txt | grep -v "#.*js" | awk '{print $1}'`
+for script_name in `cat $dir_file/config/tmp/faker2_url.txt | grep -v "#.*js" | awk '{print $1}'`
 do
-	url="$cdle_url"
-	wget $cdle_url/$script_name -O $dir_file_js/$script_name
+	url="$faker2_url"
+	wget $faker2_url/$script_name -O $dir_file_js/$script_name
 	update_if
 done
 
@@ -300,7 +297,6 @@ cat >$dir_file/config/tmp/Tsukasa007_url.txt <<EOF
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_joypark_open.js		#汪汪乐园开工位
 	jd_joypark_task.js		#汪汪乐园每日任务
-	jd_opencard_teamBean3_enc.js	#开卡默认不运行
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Tsukasa007_url.txt | grep -v "#.*js" | awk '{print $1}'`
