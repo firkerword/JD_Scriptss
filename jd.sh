@@ -76,7 +76,7 @@ stop_script_time="脚本结束，当前时间：`date "+%Y-%m-%d %H:%M"`"
 script_read=$(cat $dir_file/script_read.txt | grep "我已经阅读脚本说明"  | wc -l)
 
 task() {
-	cron_version="3.57"
+	cron_version="3.58"
 	if [[ `grep -o "JD_Script的定时任务$cron_version" $cron_file |wc -l` == "0" ]]; then
 		echo "不存在计划任务开始设置"
 		task_delete
@@ -109,7 +109,7 @@ cat >>/etc/crontabs/root <<EOF
 0 0 * * * $node $dir_file_js/star_dreamFactory_tuan.js	>/tmp/star_dreamFactory_tuan.log	#京喜开团#100#
 0 0 * * * $python3 $dir_file/git_clone/curtinlv_script/getFollowGifts/jd_getFollowGift.py >/tmp/jd_getFollowGift.log #关注有礼#100#
 0 8,15 * * * $python3 $dir_file/git_clone/curtinlv_script/OpenCard/jd_OpenCard.py  >/tmp/jd_OpenCard.log #开卡程序#100#
-0 1 * * * $python3 $dir_file/git_clone/curtinlv_script/jd_qjd.py >/tmp/jd_qjd.log #抢京豆#100#
+#0 1 * * * $python3 $dir_file/git_clone/curtinlv_script/jd_qjd.py >/tmp/jd_qjd.log #抢京豆#100#
 59 23 * * 0,1,2,5,6 sleep 57 && $dir_file/jd.sh run_jd_cash >/tmp/jd_cash_exchange.log	#签到领现金兑换#100#
 59 23 * * * $python3 $dir_file_js/jd_blueCoin.py >/tmp/jd_blueCoin.log	#东东超市兑换#100#
 45 23 * * * $dir_file/jd.sh kill_ccr #杀掉所有并发进程，为零点准备#100#
