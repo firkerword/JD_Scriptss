@@ -135,7 +135,7 @@ if (process.env.PUSH_PLUS_USER) {
 
 async function sendNotify(text, desp, params = {}) {
   //提供6种通知
-  desp += `\n\n#### 脚本仓库地址:https:\\github.com\ITdesk01\JD_Script\tree\main 核心JS采用lxk0301开源JS脚本`;
+  desp += `\n\n脚本仓库地址: https:\\github.com\ITdesk01\JD_Script\tree\main 核心JS采用lxk0301开源JS脚本`;
   await Promise.all([
     serverNotify(text, desp),//微信server酱
     pushPlusNotify(text, desp)//pushplus(推送加)
