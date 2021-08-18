@@ -259,7 +259,9 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	ZooFaker_Necklace.js 		#点点券依赖文件
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
-	gua_opencard10.js		#开卡(默认不跑自己运行)
+	gua_opencard12.js		#开卡(默认不跑自己运行)
+	gua_opencard13.js		#开卡(默认不跑自己运行)
+	gua_opencard14.js		#开卡(默认不跑自己运行)
 	jd_qcshj.js			#汽车生活节（不知道有啥用)
 	#sign_graphics_validate.js	#gua_opencard6.js使用的，还有点豆子冲
 	gua_xiaolong.js			#8.13-8.25 骁龙品牌日
@@ -316,7 +318,6 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
 	jd_superBrand.js 		#特物Z(手动跑两次就行了)
-	jd_sddd.js			#送豆得豆
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -358,7 +359,6 @@ yuannian1112_url="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main
 cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_ryhxj.js			#荣耀焕新季
 	jd_plantBean.js			#种豆得豆
-	jd_appliances.js		#家电
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 EOF
 
@@ -400,15 +400,10 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_appliances.js		#家电
+	jd_sddd.js			#送豆得豆
 	gua_opencard8.js		#开卡(默认不跑自己运行)
 	gua_opencard9.js		#开卡(默认不跑自己运行)
-	gua_opencard6.js                #七夕告白季-开卡(默认不跑自己运行)
-	gua_opencard7.js                #七夕会员福利社(默认不跑自己运行)
-	gua_doge.js			#七夕情报局
-	jd_opencard_teamBean3_enc.js	#开卡默认不运行
-	jd_opencard_teamBean4_enc.js	#开卡默认不运行限时活动随时删除
-	jd_olympic_opencard.js		#一起奔跑 为奥运加油(一次性脚本)
-	jd_opencard_Daddy.js		#8.2-8.12 奶爸盛典 爸气全开(跑完手动领取100豆,只能领一次，所以默认不执行)
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -467,12 +462,23 @@ update_script() {
 }
 
 ccr_run() {
+	#这里有的就不要加到concurrent_js_run_07
 	echo ""
 	$node $openwrt_script/JD_Script/js/jd_jxlhb.js			#京喜领红包
-	$node $openwrt_script/JD_Script/js/jd_angryCash.js #愤怒的现金
-	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
-	$node $openwrt_script/JD_Script/js/jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
+	$node $openwrt_script/JD_Script/js/jd_angryCash.js 		#愤怒的现金
+	$node $openwrt_script/JD_Script/js/gua_xiaolong.js		#8.13-8.25 骁龙品牌日
+	$node $openwrt_script/JD_Script/js/jd_redPacket.js		#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 }
+
+concurrent_js_run_07() {
+	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_qcshj.js			#汽车生活节（不知道有啥用)
+	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
+	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js 		#京喜工厂
+	$node $openwrt_script/JD_Script/js/jd_bean_change.js 		#京豆变更
+	checklog #检测log日志是否有错误并推送
+}
+
 
 run_0() {
 cat >/tmp/jd_tmp/run_0 <<EOF
@@ -489,7 +495,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_joypark_task.js		#汪汪乐园每日任务
 	jd_mp_h5.js			#疯狂星期五
 	jd_dpqd.js			#店铺签到
-	jd_appliances.js		#家电
 	jd_unsubscribe.js 		#取关店铺，没时间要求
 EOF
 	echo -e "$green run_0$start_script_time $white"
@@ -658,18 +663,6 @@ EOF
 	echo -e "$green run_07$stop_script_time $white"
 }
 
-concurrent_js_run_07() {
-	#这里的也不会并发
-	$node $openwrt_script/JD_Script/js/jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
-	$node $openwrt_script/JD_Script/js/gua_xiaolong.js			#8.13-8.25 骁龙品牌日
-	$node $openwrt_script/JD_Script/js/jd_sddd.js			#送豆得豆
-	$node $openwrt_script/JD_Script/js/jd_qcshj.js		#汽车生活节（不知道有啥用)
-	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
-	$node $openwrt_script/JD_Script/js/jd_jxlhb.js			#京喜领红包
-	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js #京喜工厂
-	$node $openwrt_script/JD_Script/js/jd_bean_change.js #京豆变更
-	checklog #检测log日志是否有错误并推送
-}
 
 run_08_12_16() {
 cat >/tmp/jd_tmp/run_08_12_16 <<EOF
