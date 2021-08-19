@@ -318,6 +318,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
 	jd_superBrand.js 		#特物Z(手动跑两次就行了)
+	jd_wish.js			#众筹许愿池
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -486,6 +487,7 @@ ccr_run() {
 
 concurrent_js_run_07() {
 	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_wish.js			#众筹许愿池
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js			#汽车生活节（不知道有啥用)
 	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js 		#京喜工厂
