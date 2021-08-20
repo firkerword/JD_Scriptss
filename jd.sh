@@ -319,6 +319,7 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_superMarket.js		#东东超市
 	jd_superBrand.js 		#特物Z(手动跑两次就行了)
 	jd_wish.js			#众筹许愿池
+	jd_kxcdz.js			#开学充电站
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -361,6 +362,7 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_ryhxj.js			#荣耀焕新季
 	jd_plantBean.js			#种豆得豆
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
+	jd_focus.js			#一次性关注脚本（默认不运行）
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -395,6 +397,7 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	gua_opencard15.js		#新的开卡（默认不运行）
 	jd_summer_movement_exchange.js	#燃动夏季红包兑换(最好今天兑换了，过时不候，手动跑)
 	jd_mp_h5.js			#疯狂星期五
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
@@ -666,6 +669,7 @@ cat >/tmp/jd_tmp/run_07 <<EOF
 	jd_speed_redpocke.js		#极速版红包
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
 	jd_jin_tie.js 			#领金贴
+	jd_kxcdz.js			#开学充电站
 	jd_unsubscribe.js 		#取关店铺，没时间要求
         gua_MMdou.js                    #赚京豆MM豆
 EOF
@@ -1239,7 +1243,7 @@ check_cooike() {
 		#$这个不要改动，没有写错
 	fi
 	sed -i "/$pt_pin/d" $openwrt_script_config/check_cookie.txt
-	remark=$(grep "$pt_pin" $openwrt_script_config/jdCookie.js | awk -F "//" '{print $2}')
+	remark=$(grep "$pt_pin" $openwrt_script_config/jdCookie.js | awk -F "," '{print $2$3}'|sed "s/\/\///g")
 	echo "$remark      $pt_pin   $Current_date      $Expiration_date" >> $openwrt_script_config/check_cookie.txt
 }
 
@@ -1247,10 +1251,22 @@ check_cookie_push() {
 	echo "----------------------------------------------"
 	cat $openwrt_script_config/check_cookie.txt
 	echo "----------------------------------------------"
-	echo "$line#### cookie数量:`cat $openwrt_script_config/js_cookie.txt |wc -l`$line" >/tmp/jd_check_cookie.txt
+	echo "$line#### cookie数量:`cat $openwrt_script_config/jdCookie.js | sed -e "s/pt_key=XXX;pt_pin=XXX//g" -e "s/pt_pin=(//g" -e "s/pt_key=xxx;pt_pin=xxx//g"| grep "pt_pin" | wc -l`$line" >/tmp/jd_check_cookie.txt
 	cat $openwrt_script_config/check_cookie.txt |sed "s/备注/$wrap$wrap_tab\# 备注/"  >>/tmp/jd_check_cookie.txt
-	echo "$line#### cookie是否有效$line" >>/tmp/jd_check_cookie.txt
-	$node $dir_file_js/jd_check_cookie1.js | grep "京东账号" >>/tmp/jd_check_cookie.txt
+	$node $dir_file_js/jd_check_cookie1.js | grep "京东账号" >/tmp/jd_check_cookie_sort.txt
+
+	effective_cookie=$(cat /tmp/jd_check_cookie_sort.txt | grep "有效" )
+	Invalid_cookie=$(cat /tmp/jd_check_cookie_sort.txt | grep "失效" )
+	echo "$line#### cookie有效数量:`cat /tmp/jd_check_cookie_sort.txt | grep "有效"| wc -l`$line" >>/tmp/jd_check_cookie.txt
+
+	echo "$effective_cookie"　>>/tmp/jd_check_cookie.txt
+
+	if [ `echo $Invalid_cookie | wc -l` -ge "1" ];then
+		echo "$line#### cookie失效数量:`cat /tmp/jd_check_cookie_sort.txt | grep "失效"| wc -l`$line" >>/tmp/jd_check_cookie.txt
+		echo "$Invalid_cookie"　>>/tmp/jd_check_cookie.txt
+	else
+		echo "没有失效cookie"
+	fi
 
 	cookie_content=$(cat /tmp/jd_check_cookie.txt |sed "s/ /+/g"| sed "s/$/$wrap$wrap_tab/g" |  sed ':t;N;s/\n//;b t' )
 
