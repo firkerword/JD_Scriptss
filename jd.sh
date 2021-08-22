@@ -318,8 +318,8 @@ cat >$dir_file/config/tmp/zero205_url.txt <<EOF
 	jd_joy_park_newtask.js		# 汪汪乐园过新手任务，有火爆账号的可以手动运行一次（默认不运行）
 	jd_superMarket.js		#东东超市
 	jd_superBrand.js 		#特物Z(手动跑两次就行了)
-	jd_wish.js			#众筹许愿池
 	jd_kxcdz.js			#开学充电站
+	jd_unsubscriLive.js		#取关主播
 EOF
 
 for script_name in `cat $dir_file/config/tmp/zero205_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -363,6 +363,7 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_plantBean.js			#种豆得豆
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_focus.js			#一次性关注脚本（默认不运行）
+	jd_dwapp.js			#积分换话费
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -376,6 +377,7 @@ done
 star261_url="https://raw.githubusercontent.com/star261/jd/main/scripts"
 cat >$dir_file/config/tmp/star261_url.txt <<EOF
 	jd_jxmc.js			#惊喜牧场(先将新手任务做完，再执行本脚本，不然会出现未知错误)
+	jd_king.js			#王者荣耀投票，脚本内随机随缘助力
 EOF
 
 for script_name in `cat $dir_file/config/tmp/star261_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -490,10 +492,10 @@ ccr_run() {
 
 concurrent_js_run_07() {
 	#这里的也不会并发
-	$node $openwrt_script/JD_Script/js/jd_wish.js			#众筹许愿池
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js			#汽车生活节（不知道有啥用)
 	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js 		#京喜工厂
+	$node $openwrt_script/JD_Script/js/jd_unsubscriLive.js		#取关主播
 	$node $openwrt_script/JD_Script/js/jd_bean_change.js 		#京豆变更
 	checklog #检测log日志是否有错误并推送
 }
@@ -643,6 +645,8 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_nzmh.js			#新一期女装盲盒
 	jd_ryhxj.js 			#荣耀焕新季
 	jd_carnivalcity.js		#手机狂欢城
+	jd_king.js			#王者荣耀投票，脚本内随机随缘助力
+	jd_dwapp.js			#积分换话费
 EOF
 	echo -e "$green run_06_18$start_script_time $white"
 
