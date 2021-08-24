@@ -363,7 +363,6 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_ryhxj.js			#荣耀焕新季
 	jd_plantBean.js			#种豆得豆
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
-	jd_focus.js			#一次性关注脚本（默认不运行）
 	jd_dwapp.js			#积分换话费
 EOF
 
@@ -423,6 +422,7 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	jd_focus.js                     #一次性关注脚本（默认不运行）
 	jd_appliances.js		#家电
 	jd_sddd.js			#送豆得豆
 	gua_opencard8.js		#开卡(默认不跑自己运行)
