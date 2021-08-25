@@ -294,6 +294,7 @@ done
 
 Tsukasa007_url="https://raw.githubusercontent.com/Tsukasa007/my_script/master"
 cat >$dir_file/config/tmp/Tsukasa007_url.txt <<EOF
+	jd_opencard_Starbucks.js	#星巴克开卡(默认不运行)
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_joypark_open.js		#汪汪乐园开工位
 	jd_joypark_task.js		#汪汪乐园每日任务
@@ -364,6 +365,7 @@ cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
 	jd_plantBean.js			#种豆得豆
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_dwapp.js			#积分换话费
+	jd_opencard17.js		#秋新资联合开卡(默认不运行)
 EOF
 
 for script_name in `cat $dir_file/config/tmp/yuannian1112_url.txt | grep -v "#.*js" | awk '{print $1}'`
