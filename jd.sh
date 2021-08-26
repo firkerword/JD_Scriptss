@@ -191,7 +191,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_car.js			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_club_lottery.js		#摇京豆
 	jd_shop.js			#进店领豆
-	jd_cash.js			#签到领现金，每日2毛～5毛长期
 	jd_jdzz.js			#京东赚赚长期活动
 	jd_syj.js			#赚京豆
 	jd_kd.js			#京东快递签到 一天运行一次即可
@@ -259,8 +258,6 @@ cat >$dir_file/config/tmp/smiek2221_url.txt <<EOF
 	ZooFaker_Necklace.js 		#点点券依赖文件
 	jd_joy_steal.js			#宠汪汪偷好友积分与狗粮
         gua_MMdou.js                    #赚京豆MM豆
-	gua_opencard12.js		#开卡(默认不跑自己运行)
-	gua_opencard13.js		#开卡(默认不跑自己运行)
 	gua_opencard14.js		#开卡(默认不跑自己运行)
 	jd_qcshj.js			#汽车生活节（不知道有啥用)
 	#sign_graphics_validate.js	#gua_opencard6.js使用的，还有点豆子冲
@@ -350,6 +347,7 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_carnivalcity.js		#手机狂欢城
 	jd_carnivalcity_help.js		#手机狂欢城内部互助
 	jd_ccSign.js			#领券中心签到
+	jd_cash.js			#签到领现金，每日2毛～5毛长期
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -361,7 +359,6 @@ done
 
 yuannian1112_url="https://raw.githubusercontent.com/yuannian1112/jd_scripts/main"
 cat >$dir_file/config/tmp/yuannian1112_url.txt <<EOF
-	jd_ryhxj.js			#荣耀焕新季
 	jd_plantBean.js			#种豆得豆
 	jd_redPacket.js			#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 	jd_dwapp.js			#积分换话费
@@ -424,6 +421,10 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
+	gua_opencard10.js		#开卡(默认不跑自己运行)
+	gua_opencard12.js		#开卡(默认不跑自己运行)
+	gua_opencard13.js		#开卡(默认不跑自己运行)
+	jd_ryhxj.js			#荣耀焕新季
 	jd_focus.js                     #一次性关注脚本（默认不运行）
 	jd_appliances.js		#家电
 	jd_sddd.js			#送豆得豆
@@ -2280,9 +2281,14 @@ additional_settings() {
 	ashou_20210516_jdcash="IhMxaeq0bvsj92i6iw@9qagtEUMPKtx@eU9YaenmYKhwpDyHySFChQ@eU9YariwMvp19G7WmXYU1w@YER3NLXuM6l4pg@eU9YaujjYv8moGrcnSFFgg@eU9Yar_kYvwjpD2DmXER3w@ZEFvJu27bvk"
 	dreamer_20200524_jdcash="IhM0aOyybv4l8266iw@eU9Yaem2bqhz-WzSyHdG1Q@eU9Ya77hNakv8GaGyXUa0Q@eU9YaLnmYv909mvWnyUX0g@aUNoKb_qI6Im9m_S"
 	test_jdcash="eU9YaO62NPh18j_dyHtA1Q@IhgybO66b_4g8me6iw@eU9YJJrOFbxPixuIshNw@eU9Yaey6MK4l9D3XwnQW1Q@eU9YaeThMqkn92vSn3Mb3w@eU9Ya-XkNfRypT_UmnRBhA"
-	new_jdcash_set="'$new_jdcash@$zuoyou_20190516_jdcash@$jidiyangguang_20190516_jdcash@$chiyu_jdcash@$Jhone_Potte_20200824_jdcash@$ashou_20210516_jdcash@$dreamer_20200524_jdcash@$test_jdcash',"
+	new_jdcash_set="'$new_jdcash@$chiyu_jdcash@$jidiyangguang_20190516_jdcash@$Jhone_Potte_20200824_jdcash@$ashou_20210516_jdcash@$zuoyou_20190516_jdcash@$dreamer_20200524_jdcash@$test_jdcash',"
 
 
+	sed -i "s/$.isNode() ? 5 : 5/$.isNode() ? 5 : 0/g" $dir_file_js/jd_cash.js
+	sed -i "s/helpAuthor = true/helpAuthor = false/g" $dir_file_js/jd_cash.js
+	sed -i "s/https:\/\/raw.githubusercontent.com\/Aaron-lv\/updateTeam\/master\/shareCodes\/jd_updateCash.json//g" $dir_file_js/jd_cash.js
+	sed -i "s/https:\/\/purge.jsdelivr.net\/gh\/Aaron-lv\/updateTeam@master\/shareCodes\/jd_updateCash.json//g" $dir_file_js/jd_cash.js
+	sed -i "s/https:\/\/cdn.jsdelivr.net\/gh\/Aaron-lv\/updateTeam@master\/shareCodes\/jd_updateCash.json//g" $dir_file_js/jd_cash.js
 	js_amount=$(cat $openwrt_script_config/js_cookie.txt | wc -l)
 	sed -i "s/inviteCodes = \[/inviteCodes = \[\n/g" $dir_file_js/jd_cash.js
 	cashcode_rows=$(grep -n "inviteCodes = \[" $dir_file_js/jd_cash.js | awk -F ":" '{print $1}')
