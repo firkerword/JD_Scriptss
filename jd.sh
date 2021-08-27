@@ -344,8 +344,6 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_jxlhb.js			#京喜领红包
 	jd_nzmh.js			#新一期女装盲盒
 	jd_mohe.js			#5G超级盲盒
-	jd_carnivalcity.js		#手机狂欢城
-	jd_carnivalcity_help.js		#手机狂欢城内部互助
 	jd_ccSign.js			#领券中心签到
 	jd_cash.js			#签到领现金，每日2毛～5毛长期
 EOF
@@ -400,8 +398,6 @@ done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
 	jd_bean_change_new.js 		#资产变动强化版
-	gua_opencard15.js		#新的开卡（默认不运行）
-	jd_summer_movement_exchange.js	#燃动夏季红包兑换(最好今天兑换了，过时不候，手动跑)
 	jd_mp_h5.js			#疯狂星期五
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
@@ -421,15 +417,11 @@ EOF
 
 #删掉过期脚本
 cat >/tmp/del_js.txt <<EOF
-	gua_opencard10.js		#开卡(默认不跑自己运行)
-	gua_opencard12.js		#开卡(默认不跑自己运行)
-	gua_opencard13.js		#开卡(默认不跑自己运行)
-	jd_ryhxj.js			#荣耀焕新季
-	jd_focus.js                     #一次性关注脚本（默认不运行）
-	jd_appliances.js		#家电
-	jd_sddd.js			#送豆得豆
-	gua_opencard8.js		#开卡(默认不跑自己运行)
-	gua_opencard9.js		#开卡(默认不跑自己运行)
+	jd_ryhxj.js 			#荣耀焕新季
+	jd_carnivalcity.js		#手机狂欢城
+	jd_carnivalcity_help.js		#手机狂欢城内部互助
+	gua_opencard15.js		#新的开卡（默认不运行）
+	jd_summer_movement_exchange.js	#燃动夏季红包兑换(最好今天兑换了，过时不候，手动跑)
 EOF
 
 for script_name in `cat /tmp/del_js.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -499,11 +491,9 @@ ccr_run() {
 concurrent_js_run_07() {
 	#这里的也不会并发
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js			#汽车生活节（不知道有啥用)
-	$node $openwrt_script/JD_Script/js/jd_carnivalcity_help.js	#手机狂欢城内部互助
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js 		#京喜工厂
 	$node $openwrt_script/JD_Script/js/jd_unsubscriLive.js		#取关主播
 	$node $openwrt_script/JD_Script/js/jd_bean_change_new.js 	#资产变动强化版
-	#$node $openwrt_script/JD_Script/js/jd_bean_change.js 		#京豆变更
 	checklog #检测log日志是否有错误并推送
 }
 
@@ -651,8 +641,6 @@ cat >/tmp/jd_tmp/run_06_18 <<EOF
 	jd_gold_creator.js		#金榜创造营
 	jd_goodMorning.js		#早起福利
 	jd_nzmh.js			#新一期女装盲盒
-	jd_ryhxj.js 			#荣耀焕新季
-	jd_carnivalcity.js		#手机狂欢城
 	jd_king.js			#王者荣耀投票，脚本内随机随缘助力
 	jd_dwapp.js			#积分换话费
 EOF
@@ -1917,8 +1905,7 @@ additional_settings() {
 
 	#东东农场
 	new_fruit1="0763443f7d6f4f5ea5e54adc1c6112ed@e61135aa1963447fa136f293a9d161c1@f9e6a916ad634475b8e77a7704b5c3d8@713f6d7bd3084b4eb157375e119ef521@6632c8135d5c4e2c9ad7f4aa964d4d11@31a2097b10db48429013103077f2f037@5aa64e466c0e43a98cbfbbafcc3ecd02@bf0cbdb0083d443499a571796af20896@690009b0d5674e85b751838b2fa6241e@5f952ad609b1440b94599eaec41d853f"
-	zuoyou_20190516_fr="367e024351fe49acaafec9ee705d3836@3040465d701c4a4d81347bc966725137@82c164278e934d5aaeb1cf19027a88a3@a2504cd52108495496460fc8624ae6d4@4eb7542e28714d6e86739151f8aadc6e@983be1208879492fa692c1b89a30fc15@ba02bdbac56a4b9c967443eae04bc8fa@3e3080883ea346d0a653afaeac74b357"
-	zuoyou_random_fr="e8bd1e69ccc24d65a4e183dcfb025606@ce0c26cd3375486c8ad41c4e1f61c449@44ba60178aa04b7895fe60c8f3b80a71@dbd7dcdbb75940d3b81282d0f439673f@2c464c0f26c24daf84eb2e1e76a98d02@813e19ad60b049bcbb96d29d07f59847@7fe23f78c77a47b0aba16b302eedbd3c@3e0769f3bb2042d993194db32513e1b9@b167fbe380124583a36458e5045ead57@5a1448c1a7944ed78bca2fa7bfeb8440@0a1df400680b4c46a63840639be54e7c@e44f11f501564fc292ef307b1230a555@dab9d4730f204a208fa0e7c9477b63ee@795bcfec097a4a88bda46eea075422c1@b6c7218d36ce4973a8a3f5be31e652e5@3dfb8197a4a9465c898271838ab45eed@d901a85f4c9e46ffb2174ec4a5854ddc@a90e2f00c3a847ffa76d655563253244"
+	zuoyou_20190516_fr="367e024351fe49acaafec9ee705d3836@3040465d701c4a4d81347bc966725137@82c164278e934d5aaeb1cf19027a88a3@a2504cd52108495496460fc8624ae6d4@4eb7542e28714d6e86739151f8aadc6e@983be1208879492fa692c1b89a30fc15@ba02bdbac56a4b9c967443eae04bc8fa@3e3080883ea346d0a653afaeac74b357@e8bd1e69ccc24d65a4e183dcfb025606@ce0c26cd3375486c8ad41c4e1f61c449"
 	Javon_20201224_fr="926a1ec44ddd459ab2edc39005628bf4@d535648ffa3b45d79ff66b997ec8b629"
 	Javon_random_fr="b2921984328744d7bc4302738235a4a8@8ac8cb7c9ded4a17b8057e27ed458104@e65a8b0cd1cc433a87bfd5925778fadc@669e5763877c4f97ab4ea64cd90c57fa@86ab77a88a574651827141e1e8c0b4c6@8ac8cb7c9ded4a17b8057e27ed458104@33b778b454a64b1e91add835e635256c@c9bb7ca2a80d4c8ab2cae6216d7a9fe6@dcfb05a919ff472680daca4584c832b8@0ce9d3a5f9cd40ccb9741e8f8cf5d801@54ac6b2343314f61bc4a6a24d7a2eba1@bad22aba416d4fffb18ad8534b56ea60@e5a87df07c914457b855cbb2f115d0a4@9a4370f99abb4eda8fa61d08be81c1d7@d535648ffa3b45d79ff66b997ec8b629@8b8b4872ab9d489896391cc5798a56e2"
 	chiyu_fr="f227e8bb1ea3419e9253682b60e17ae5"
@@ -1946,7 +1933,7 @@ additional_settings() {
 	youxizhenhaowan_20201229_fr="99a9841c61f94408beecd446ff9075f1@287ccad61f0249dab7426db9f019e5e1@b2ed38d653c945e18a5c38b73fae0a4e"
 
 	#谈何容易
-	tanherongyi_20210121_fr="24156b43b0664cff955e2bedea49e2b5@1cf02b657b524b90b882e45414893abe@9875e6c9ea2e4cd2a89adeea15383315"
+f	tanherongyi_20210121_fr="24156b43b0664cff955e2bedea49e2b5@1cf02b657b524b90b882e45414893abe@5ec06e692aa8412db93acb3b4ec47a58@9875e6c9ea2e4cd2a89adeea15383315"
 
 	#无聊
 	wuliao_20210214_fr="6b8689615bdc4831a9f9b96d8842e06e@85da7dbfa1b749efb3f7b1ffa7e6d018"
@@ -1974,8 +1961,11 @@ additional_settings() {
 
 	#屌大话事
 	ddhs_20210603_fr="f3b80f8d7c8d46e0a635567a2c39289b"
+
+	#男人的肩膀
+	nrdjb__20210410_fr="6d35cebe56bf497aa2bb9f594d83ca4f@7ece4d2e655845ceaaf8e62736e82139@0feb8d1d1cfb4a2484e600fb770cd740@2e0b1d2ff0714ffd9d183be1816a881e@42ee60bf30a841cd90a6bd417d1bbc8c@57df60b68aef4aabb2deb603b925a26c@0f5b398f3c8a4fc3915c7334d3e1f19d@fe950194a5a046f69d0abb88af5db23f@b456a1a6093343e38ddd6e714ea680da@af4c0ce042bc438fb7ff097e88f4dd6f@059d422bc7df431996c113cb346153d4@a16ca3b6f39345acbe973bb11470a55c@34bd3fca2f1b4bf2bfa8c6972ff0c766@7dd26a15bce64b91820a41ca4df331e0@4c1951196a28497296187edf707d0172@6fc000a5542c4411936df6430302b1b5@0c2beeba8c964e9aa2e8010076d5c9cf@dc0b7c93ce824bfa8263b5b8b072980a@00d5a8c28c754c57b08d68d94568dd36"
 	
-	random_fruit="$dreamer_20200524_fr@$adong_20201108_fr@$whiteboy__20190711_fr@$wuliao_20210214_fr@$tanherongyi_20210121_fr@$wjq_20190516_fr@$NanshanFox_20210303_fr@$Lili_20210121_fr@$jisi_20201211_fr@$Luckies_20210205_fr@$yushengyigelang_2021017_fr@$youxizhenhaowan_20201229_fr@$zuoyou_random_fr@$superbei666_20201124_fr@$cainiao5_20201209_fr@$xiacao_20210102_fr@$fwkgzs_20210522_fr@$ddhs_20210603_fr"
+	random_fruit="$dreamer_20200524_fr@$adong_20201108_fr@$whiteboy__20190711_fr@$wuliao_20210214_fr@$tanherongyi_20210121_fr@$wjq_20190516_fr@$NanshanFox_20210303_fr@$Lili_20210121_fr@$jisi_20201211_fr@$Luckies_20210205_fr@$yushengyigelang_2021017_fr@$youxizhenhaowan_20201229_fr@$superbei666_20201124_fr@$cainiao5_20201209_fr@$xiacao_20210102_fr@$fwkgzs_20210522_fr@$ddhs_20210603_fr@$nrdjb__20210410_fr"
 	random="$random_fruit"
 	random_array
 	new_fruit_set="'$new_fruit1@$zuoyou_20190516_fr@$Javon_20201224_fr@$jidiyangguang_20190516_fr@$ashou_20210516_fr@$xiaodengzi_20190516_fr@$xiaobandeng_fr@$chiyu_fr@$random_set',"
@@ -1998,8 +1988,7 @@ additional_settings() {
 
 	#萌宠
 	new_pet1="MTE1NDUyMjEwMDAwMDAwNDI4ODA5NDU=@MTE1NDQ5OTUwMDAwMDAwNDI4ODA5NTE=@MTE1NDAxNzcwMDAwMDAwMzk1OTQ4Njk==@MTE1NDQ5OTUwMDAwMDAwMzk3NDgyMDE==@MTAxODEyOTI4MDAwMDAwMDQwMTIzMzcx@MTEzMzI0OTE0NTAwMDAwMDA0MzI3NzE3MQ==@MTE1NDQ5OTIwMDAwMDAwNDQzNjYzMTE=@MTE1NDUwMTI0MDAwMDAwMDQ0MzY2NDMx"
-	zuoyou_20190516_pet="MTEzMzI0OTE0NTAwMDAwMDAzODYzNzU1NQ==@MTE1NDAxNzgwMDAwMDAwMzg2Mzc1Nzc=@MTE1NDAxNzgwMDAwMDAwMzg4MzI1Njc=@MTE1NDQ5OTIwMDAwMDAwNDM3MTM3ODc=@MTAxNzIyNTU1NDAwMDAwMDA1MDIyMjIwMQ==@MTAxNzIxMDc1MTAwMDAwMDA1MDIyMjE2OQ==@MTEzMzI1MTE4NDAwMDAwMDA1MDA5Nzg4MQ==@MTAxNzIxMDc1MTAwMDAwMDA1MDA5NzczOQ=="
-	zuoyou_random_pet="MTEzMzI1MTE4NDAwMDAwMDA1MDExNTc2MQ==@MTEzMzI1MTE4NDAwMDAwMDA1MDEyMzYxNw==@MTAxODc2NTE0NzAwMDAwMDAyNDk1MDMwMQ==@MTE1NDQ5OTUwMDAwMDAwNDM3MDkyMDc=@MTE1NDQ5OTUwMDAwMDAwNDQxNDI2MzU=@MTE0MjI0NTE1MjAwMDAwMDA0NzY2OTgyMQ==@MTAxODc2NTEzNTAwMDAwMDAyMjc1OTY1NQ==@MTEzMzI0OTE0NTAwMDAwMDA0MzQ1OTI1MQ==@MTAxODc2NTEzNDAwMDAwMDAyNzAxMjc1NQ==@MTAxODc2NTEzMDAwMDAwMDAyMTIzNjU5Nw==@MTAxODc2NTEzMjAwMDAwMDAxOTc4OTA3MQ==@MTE1MzEzNjI2MDAwMDAwMDUxMTE4ODIz@MTE1MzEzNjI2MDAwMDAwMDUxNDI1MDM1@MTE1NDQ5OTUwMDAwMDAwNDQwNTM0OTk=@MTAxNzIxMDc1MTAwMDAwMDA1MTY5MTg1Nw==@MTAxNzIxMDc1MTAwMDAwMDA1MTcwMjc5MQ==@MTEyOTEzNzMzMDAwMDAwMDUyMDI0NjQz@MTEzMzI1MTE4NTAwMDAwMDA1MjE3NDAwNQ=="
+	zuoyou_20190516_pet="MTEzMzI0OTE0NTAwMDAwMDAzODYzNzU1NQ==@MTE1NDAxNzgwMDAwMDAwMzg2Mzc1Nzc=@MTE1NDAxNzgwMDAwMDAwMzg4MzI1Njc=@MTE1NDQ5OTIwMDAwMDAwNDM3MTM3ODc=@MTAxNzIyNTU1NDAwMDAwMDA1MDIyMjIwMQ==@MTAxNzIxMDc1MTAwMDAwMDA1MDIyMjE2OQ==@MTEzMzI1MTE4NDAwMDAwMDA1MDA5Nzg4MQ==@MTAxNzIxMDc1MTAwMDAwMDA1MDA5NzczOQ==@MTEzMzI1MTE4NDAwMDAwMDA1MDExNTc2MQ==@MTEzMzI1MTE4NDAwMDAwMDA1MDEyMzYxNw=="
 	Javon_20201224_pet="MTE1NDUyMjEwMDAwMDAwNDE2NzYzNjc="
 	Javon_random_pet="MTE0MDQ3MzIwMDAwMDAwNDczODQ2MTM=@MTAxODc2NTEzMDAwMDAwMDAxODU0NzI3Mw==@MTE1NDAxNzgwMDAwMDAwNDI1MjkxMDU=@MTE1NDQ5OTIwMDAwMDAwNDIxMjgyNjM=@MTE1NDAxNzYwMDAwMDAwMzYwNjg0OTE=@MTE1NDQ5OTIwMDAwMDAwNDI4Nzk3NTE=@MTE1NDQ5OTUwMDAwMDAwNDMwMTIxMzc=@MTE1NDQ5MzYwMDAwMDAwNDQ0NTA5MzM=@MTEzMzI0OTE0NTAwMDAwMDA0NDQ1ODY4NQ=="
 	chiyu_pet="MTAxODEyOTI4MDAwMDAwMDQwNzYxOTUx"
@@ -2028,7 +2017,7 @@ additional_settings() {
 	youxizhenhaowan_20201229_pet="MTAxODc2NTEzNDAwMDAwMDAyMTk5NDI5Mw==@MTAxODc2NTEzMjAwMDAwMDAyMjY5OTk0Nw==@MTE1NDQ5OTUwMDAwMDAwNDQ1OTY2NTU="
 
 	#谈何容易
-	tanherongyi_20210121_pet="MTAxODc2NTEzNDAwMDAwMDAwNTgyNjI2Nw==@MTEzMzI0OTE0NTAwMDAwMDA0Mzg1NTQwMQ==@MTEyOTEzNzMzMDAwMDAwMDUwMzQ5Mzkx"
+	tanherongyi_20210121_pet="MTAxODc2NTEzNDAwMDAwMDAwNTgyNjI2Nw==@MTEzMzI0OTE0NTAwMDAwMDA0Mzg1NTQwMQ==@MTE1NDUyMjEwMDAwMDAwNDM4NTU0MDU=@MTEyOTEzNzMzMDAwMDAwMDUwMzQ5Mzkx"
 
 	#无聊
 	wuliao_20210214_pet="MTE1NDAxNzcwMDAwMDAwMzk5NDUxMTE=@MTEzMzI0OTE0NTAwMDAwMDA0NDg0NzkxOQ=="
@@ -2056,8 +2045,11 @@ additional_settings() {
 
 	#屌大话事
 	ddhs_20210603_pet="MTAxODcxOTI2NTAwMDAwMDAzMTE4MDQzOQ=="
+
+	#男人的肩膀
+	nrdjb__20210410_pet="MTE0MDkyMjEwMDAwMDAwNDc1NjE5MDM=@MTEyNDI1MTEyMDAwMDAwMDA0NzYxODA4Mw==@MTEzNzcwMTQ4MDAwMDAwMDQ3ODg3ODkz@MTE0MjI0NTE1MjAwMDAwMDA0NzU3NTkwOQ==@MTE0MjI0NTE1MjAwMDAwMDA0NzYxODE0OQ==@MTEyMTY4MjgwMDAwMDAwNDk2NTkyOTM=@MTEzNzg0MjA4MDAwMDAwMDQ5NjY5Nzkz@MTEzMzI1MDE4NzAwMDAwMDA0OTczOTMzNw==@MTE5MzEwNTEzODAwMDAwMDA1MDQ2NjU0OQ==@MTEyNjE4NjQ2MDAwMDAwMDUwNDY3MTg1@MTEzMzI1MTE4NTAwMDAwMDA1MDg2MjAyMw==@MTE1NDY3NTMwMDAwMDAwNTA4NjIwNDM=@MTEyNzEzMjc0MDAwMDAwMDUyMTc0Nzg1@MTEyNjE4NjQ2MDAwMDAwMDUzMzYzMTA5@MTEyOTEzNzMzMDAwMDAwMDUzODY3MzIx"
 	
-	random_pet="$dreamer_20200524_pet@$adong_20201108_pet@$whiteboy_20190711_pet@$wuliao_20210214_pet@$tanherongyi_20210121_pet@$wjq_20190516_pet@$NanshanFox_20210303_pet@$Lili_20210121_pet@$jisi_20201211_pet@$Luckies_20210205_pet@$yushengyigelang_2021017_pet@$youxizhenhaowan_20201229_pet@$zuoyou_random_pet@$superbei666_20201124_pet@$cainiao5_20201209_pet@$xiaocao_20210102_pet@$fwktzs_20210522_pet@$ddhs_20210603_pet"
+	random_pet="$dreamer_20200524_pet@$adong_20201108_pet@$whiteboy_20190711_pet@$wuliao_20210214_pet@$tanherongyi_20210121_pet@$wjq_20190516_pet@$NanshanFox_20210303_pet@$Lili_20210121_pet@$jisi_20201211_pet@$Luckies_20210205_pet@$yushengyigelang_2021017_pet@$youxizhenhaowan_20201229_pet@$superbei666_20201124_pet@$cainiao5_20201209_pet@$xiaocao_20210102_pet@$fwktzs_20210522_pet@$ddhs_20210603_pet@$nrdjb__20210410_pet"
 	random="$random_pet"
 	random_array
 	new_pet_set="'$new_pet1@$zuoyou_20190516_pet@$Javon_20201224_pet@$jidiyangguang_20190516_pet@$ashou_20210516_pet@$Jhone_Potte_20200824_pet@$chiyu_pet@$random_set',"
@@ -2078,8 +2070,7 @@ additional_settings() {
 
 	#种豆
 	new_plantBean1="nuvfqviuwvnigxx65s7s77gbbvd4thrll7o63pq@fn5sjpg5zdejnypipngfhaudisqrfccakjuyaty@e7lhibzb3zek2xhmmypkf6ratimjeenqwvqvwjq@4npkonnsy7xi3n46rivf5vyrszud7yvj7hcdr5a@mlrdw3aw26j3xeqso5asaq6zechwcl76uojnpha@nkvdrkoit5o65lgaousaj4dqrfmnij2zyntizsa@u5lnx42k5ifivyrtqhfjikhl56zsnbmk6v66uzi@5sxiasthesobwa3lehotyqcrd4@b3q5tww6is42gzo3u67hjquj54@b3q5tww6is42gzo3u67hjquj54"
-	zuoyou_20190516_pb="sz5infcskhz3woqbns6eertieu@mxskszygpa3kaouswi7rele2ji@4npkonnsy7xi3vk7khql3p7gkpodivnbwjoziga@cq7ylqusen234wdwxxbkf23g6y@iu237u55hwjio2j4q6dveezrcun6yqgyh6iyj7a@qo77jw3hunt3nwx5wzintmzzyeetch6vbwqskmy@dhsx55vjyuzkxicr2ttrsc6c47dzqhvbnhxu33y@66nvo67oyxpycn4ikn3qhdxcdn6mteht2kjzfma"
-	zuoyou_random_pb="66nvo67oyxpycs3powuv6bovdtfmlunzvyx4roa@suqg5cye47cqmod5cabkwhsnvol5lpdrhgb3frq@s7ete3o7zokpafftarfntyydni@4npkonnsy7xi3tqkdk2gmzv5vdq4xk4g3cuwp7y@qmnmamd3ukiwrtnx6sq7g3blplzmvfmfttdfgqa@yamkm32as4qqgkqymjwa2emtlmfcmoymverzcda@advwde6ogv6oya4md5eieexlfi@ubn2ft6u6wnfxwt6eyxsbcvj44@mlrdw3aw26j3xizu2u66lufwmtn37juiz4xzwmi@e7lhibzb3zek35xkfdysslqi4jy7prkhfvxryma@mlrdw3aw26j3weslsqiv35egq6yhiga6ih46s6q@e7lhibzb3zek3cnel4omxkur5budlyrxyoksy4y@e7lhibzb3zek3ql4gdkfsgazxg7az3o67diu24q@t7obxmpebrxkdzo2illrfmwke3a3klwvfysjiiy@4npkonnsy7xi3omuxlivpnod3qofin7d6pcpc3a@khg7lkfguxy75yrawn3onmbt6sl3r3csozgvf2a@3nds3dh2ebzaunb64li4gsjzhm@e7lhibzb3zek3edgupmt7btbwgacsazjktzqw7y"
+	zuoyou_20190516_pb="sz5infcskhz3woqbns6eertieu@mxskszygpa3kaouswi7rele2ji@4npkonnsy7xi3vk7khql3p7gkpodivnbwjoziga@cq7ylqusen234wdwxxbkf23g6y@iu237u55hwjio2j4q6dveezrcun6yqgyh6iyj7a@qo77jw3hunt3nwx5wzintmzzyeetch6vbwqskmy@dhsx55vjyuzkxicr2ttrsc6c47dzqhvbnhxu33y@66nvo67oyxpycn4ikn3qhdxcdn6mteht2kjzfma@66nvo67oyxpycs3powuv6bovdtfmlunzvyx4roa@suqg5cye47cqmod5cabkwhsnvol5lpdrhgb3frq"
 	Javon_20201224_pb="wpwzvgf3cyawfvqim3tlebm3evajyxv67k5fsza"
 	Javon_random_pb="g3ekvuxcunrery7ooivfylv2ci5ac3f4ijdgqji@wgkx2n7t2cr5oa6ro77edazro3kxfdgh6ixucea@qermg6jyrtndlahowraj6265fm@rug64eq6rdioosun4upct64uda5ac3f4ijdgqji@t4ahpnhib7i4hbcqqocijnecby@5a43e5atkvypfxat7paaht76zy@gdi2q3bsj3n4dgcs5lxnn2tyn4@mojrvk5gf5cfszku73tohtuwli@l4ex6vx6yynouzcgilo46gozezzpsoyqvp66rta@beda5sgrp3bnfrynnqutermxoe"
 	chiyu_pb="crydelzlvftgpeyuedndyctelq"
@@ -2108,7 +2099,7 @@ additional_settings() {
 	youxizhenhaowan_20201229_pb="mlrdw3aw26j3ws2ofu6z6zmp2makwftxpb2slny@nkvdrkoit5o65kqag3swpe4wvp4qhfiwkrlshdi@4npkonnsy7xi3zj7xztax2zk6jnuc7vhxmykmga"
 	
 	#谈何容易
-	tanherongyi_20210121_pb="pmxp2qr7mydqspc3tkg77sgvvq@o7eiltak46s2xndhlcezeax3dgahzy5y5f777ii@mlrdw3aw26j3xnz7savvsdqpku6pdzwhoveqrwi"
+	tanherongyi_20210121_pb="pmxp2qr7mydqspc3tkg77sgvvq@o7eiltak46s2xndhlcezeax3dgahzy5y5f777ii@4npkonnsy7xi2sk3g2epg2bye37g7vtgfxc3lvi@mlrdw3aw26j3xnz7savvsdqpku6pdzwhoveqrwi"
 
 	#无聊
 	wuliao_20210214_pb="v6kcqz3wklbhayiw6oadtlos343h7wlwy7o5jii@xooz5rk4vgwfnuxjhefh6ceqwma5yrgx34uq26y"
@@ -2136,8 +2127,11 @@ additional_settings() {
 
 	#屌大话事
 	ddhs_20210603_pb="mlrdw3aw26j3xltrtksfk72uf334zcoz5oy57jq"
+
+	#男人的肩膀
+	nrdjb_20210410_pb="mlrdw3aw26j3xrmo27a7gwhqib6tphgfe5jp4qa@e7lhibzb3zek2uiwehcjskshpbv4rcvx64hk4ey@e7lhibzb3zek36kzitj4f4kik7tuc2ycyj2ijba@ozv5zqmojvq5esnehe7ggu6tbu@t7obxmpebrxkcqooz2nbfanus76oyfn6rcrnsfi@gou7sxm3hztwoymqqgnsbisb6wt5bsenwtaawpy@l4ex6vx6yynouq7xkpw3qhhe5bbbjyxfseisc4i@gou7sxm3hztwp2yyywal57nlokcsmt72xnyb65a@e7lhibzb3zek3lpd52sfotabetn2565ntspapky@wsr6thb5bd25kgh7h6sb7bxgtcux4vuptzsjetq@qmnmamd3ukiwqyfnl6vz7z2bhqqr5mbi3ut3a6a@7jcz4j7m22med46n7e3ondhoifaq3wm2kn32m2i@wsr6thb5bd25k3avrly2tzpterzalu4jn2sdipa@eeexxudqtlamphmc3b4qcjifrkxrwbpw5dmt6tq@yhgveqpmpmqznondv7ujyzdyqfusc25h44s5mri@4npkonnsy7xi2nmxrxeyjvpppbbhljfbokrfp2i@ebxm5lgxoknqc5gtb4a3hb6spvcfjtjxigjs6ai@olmijoxgmjutzlikwi7fh4lssftlzegs3bgboxa@o6anvgitbfdkpnbqvvtvyxm4nkrvgy637ira64a"
 	
-	random_plantBean="$dreamer_20200524_pb@$adong_20201108_pb@$whiteboy_20190711_pd@$wuliao_20210214_pb@$tanherongyi_20210121_pb@$wjq_20190516_pb@$NanshanFox_20210303_pb@$Lili_20210121_pb@$jisi_20201211_pb@$Luckies_20210205_pb@$yushengyigelang_2021017_pb@$youxizhenhaowan_20201229_pb@$zuoyou_random_pb@$superbei666_20201124_pb@$cainiao5_20201209_pb@$xiaocao_20210102_pb@$fwktzs_20210522_pb@$ddhs_20210603_pb"
+	random_plantBean="$dreamer_20200524_pb@$adong_20201108_pb@$whiteboy_20190711_pd@$wuliao_20210214_pb@$tanherongyi_20210121_pb@$wjq_20190516_pb@$NanshanFox_20210303_pb@$Lili_20210121_pb@$jisi_20201211_pb@$Luckies_20210205_pb@$yushengyigelang_2021017_pb@$youxizhenhaowan_20201229_pb@$superbei666_20201124_pb@$cainiao5_20201209_pb@$xiaocao_20210102_pb@$fwktzs_20210522_pb@$ddhs_20210603_pb@$nrdjb_20210410_pb"
 	random="$random_plantBean"
 	random_array
 	new_plantBean_set="'$new_plantBean1@$zuoyou_20190516_pb@$Javon_20201224_pb@$jidiyangguang_20190516_pb@$ashou_20210516_pb@$xiaobandeng_pb@$chiyu_pb@$random_set',"
@@ -2159,8 +2153,7 @@ additional_settings() {
 
 	#京喜工厂
 	new_dreamFactory="X2poJVLcLoygZX0TgGmkl8EiBIkQe_zrMAZqtgL24-M=@5MIEocu93aHBEq_1DLOFFA==@DAJklWSqv4HcjA35zvIPGA==@4HL35B_v85-TsEGQbQTfFg==@q3X6tiRYVGYuAO4OD1-Fcg==@Gkf3Upy3YwQn2K3kO1hFFg==@w8B9d4EVh3e3eskOT5PR1A==@jwk7hHoEWAsvQyBkNrBS1Q==@iqAUAWEQx86GvVthAu7-jQ=="
-	zuoyou_20190516_df="oWcboKZa9XxTSWd28tCEPA==@sboe5PFeXgL2EWpxucrKYw==@rm-j1efPyFU50GBjacgEsw=="
-	zuoyou_random_df="9aUfCEmRqRW9fK7-P-eGnQ==@4yiyXPAaB_ReMPQy-st4AQ==@MmOfTa6Z79J9XRZA4roX1A==@rlJZquhGZTvDFksbDMhs2Q==@BprHGWI9w04zUnZPbIzKgw==@D_ttRc6eCyMxdHjMRGLobA==@9whmFTgMFw7ZfXcQdEJ3UA==@zVn3SNiwrEhxQEcbMZA27w==@cA7LmxYoXxJNLnS7j25dxA==@aAwyOK0kb9OSm2oq2JVYMQ==@fJG2PKwt_lyUO_lfI5PX9g==@uz5oyErItGddBaX0AU31iQ==@lkm-PW8IwZrJcsSlINmd8g==@m-iD2v1j6Xu0SfRKHRWlxA==@raoUGpBnXehKaCpw3RwrIA==@6HsHRAVQvVQtuRCQB0A1SP9vZkEe15A1QFmshsQPc9Q=@D-g3CCVCq0xZBEPtMkVDFg==@2Lsin5Sag_mMqJhKGrzVmA=="
+	zuoyou_20190516_df="oWcboKZa9XxTSWd28tCEPA==@sboe5PFeXgL2EWpxucrKYw==@rm-j1efPyFU50GBjacgEsw==@tZXnazfKhM0mZd2UGPWeCA==@9aUfCEmRqRW9fK7-P-eGnQ==@4yiyXPAaB_ReMPQy-st4AQ==@MmOfTa6Z79J9XRZA4roX1A==@rlJZquhGZTvDFksbDMhs2Q==@DriN9xUWha-XqE0cN3u7Fg==@krMPYOnVbZAAkZJiSz5cUw=="
 	Javon_20201224_df="qXsC2yNWiylHJjOrjebXgQ==@P2nGgK6JgLtCqJBeQJ0f27XXLQwYAFHrKmA2siZTuj8=@LTyKtCPGU6v0uv-n1GSwfQ=="
 	Javon_20201224_random_df="P2nGgK6JgLtCqJBeQJ0f27XXLQwYAFHrKmA2siZTuj8=@Y4r32JTAKNBpMoCXvBf7oA==@KDhTwFSjylKffc2V7dp5HQ==@UdTgtWxsEwypwH1v6GETfA==@LTyKtCPGU6v0uv-n1GSwfQ==@JuMHWNtZt4Ny_0ltvG6Ipg==@WnaDbsWYwImvOD1CpkeVWA==@Z2t6d_X8aMYIp7IwTnuNyA==@1Oob_S4cfK2z2gApmzRBgw==@BsCgeeTl_H2x5JQKGte6ow==@y7KhVRopnOwB1qFo2vIefg==@zS1ivJY43UFvaqOUiFijZQ==@USNexnDxgdW3h1M84IA8hQ==@QcxX97p7yNgImbEEZVEcyw==@N3AXGi-1Gt51bwdrCo76-Q=="
 	chiyu_df="us6se4fFC6cSjHDSS_ScMw=="
@@ -2187,7 +2180,7 @@ additional_settings() {
 	youxizhenhaowan_20201229_df="VCCRGELL4kcTt-k5f1JuzQ==@_MwTo0claD9j3U7jdnX5kg=="
 
 	#谈何容易
-	tanherongyi_20210121_df="6FDe4u9M6bpexYt56q3tkA==@1qghHzQ8cbiaeDamUxjf5Q==@qOywEW9dxw7K_501KiW-Lg=="
+	tanherongyi_20210121_df="6FDe4u9M6bpexYt56q3tkA==@1qghHzQ8cbiaeDamUxjf5Q==@TR0NgszBNvxdcrohLZDvgg==@qOywEW9dxw7K_501KiW-Lg=="
 
 	#无聊
 	wuliao_20210214_df="JErwGyIaLAyHtTRlNVQFFg==@CIbMmbN2ZCilYQLCGc_3iQ=="
@@ -2215,8 +2208,11 @@ additional_settings() {
 
 	#屌大话事
 	ddhs_20210603_df="3my4yYrvmmvshRRBiJ-Ctg=="
+
+	#男人的肩膀
+	nrdjb_20210410_df="GlARgeZqZgq2YlOd1iVvpQ==@hSrF4ewFbBtZqFkUty_7_w==@ZLHWbIot-qsuyVHdu5MMTA==@Okmzf0DkUi4jT35ZFO9bSg==@BaoEK1ct0fpYFNMgG0yTEA==@MpjCgijJgPPXjH3cV5Cqjw=="
 	
-	random_dreamFactory="$test_df@$dreamer_20200524_df@$adong_20201108_df@$whiteboy__20190711_df@$wuliao_20210214_df@$tanherongyi_20210121_df@$wjq_20190516_df@$NanshanFox_20210303_df@$Lili_20210121_df@$jisi_20201211_df@$yushengyigelang_2021017_df@$youxizhenhaowan_20201229_df@$zuoyou_random_df@$superbei666_20201124_df@$cainiao5_20201209_df@$xiaocao_20210102_df@$fwktzs_20210522_df@$ddhs_20210603_df"
+	random_dreamFactory="$test_df@$dreamer_20200524_df@$adong_20201108_df@$whiteboy__20190711_df@$wuliao_20210214_df@$tanherongyi_20210121_df@$wjq_20190516_df@$NanshanFox_20210303_df@$Lili_20210121_df@$jisi_20201211_df@$yushengyigelang_2021017_df@$youxizhenhaowan_20201229_df@$superbei666_20201124_df@$cainiao5_20201209_df@$xiaocao_20210102_df@$fwktzs_20210522_df@$ddhs_20210603_df@$nrdjb_20210410_df"
 	random="$random_dreamFactory"
 	random_array
 	new_dreamFactory_set="'$new_dreamFactory@$zuoyou_20190516_df@$Javon_20201224_df@$jidiyangguang_20190516_df@$ashou_20210516_df@$Jhone_Potte_20200824_df@$chiyu_df@$random_set',"
@@ -2275,7 +2271,7 @@ additional_settings() {
 
 	#签到领现金
 	new_jdcash="95OquUc_sFugJO5_E_2dAgm-@eU9YELv7P4thhw6utCVw@eU9YaOjnbvx1-Djdz3UUgw@eU9Yau_gMP4nombWynsU1w@eU9Ya--wYP8g8zyBnyJF0w@eU9YFZ_THaRkrhGyrDlm@eU9Ya-iyZ68kpWrRmXBFgw@eU9YabrkZ_h1-GrcmiJB0A@eU9YM7bzIptVshyjrwlteU9YCLTrH5VesRWnvw5t@P2nGgK6JgLtCqJBeQJ0f27XXLQwYAFHrKmA2siZTuj8=@JuMHWNtZt4Ny_0ltvG6Ipg==@IRM2beu1b-En9mzUwnU@eU9YaOSwMP8m-D_XzHpF0w@eU9Yau-yMv8ho2fcnXAQ1Q@eU9YCovbMahykhWdvS9R@JxwyaOWzbvk7-W3WzHcV1mw"
-	zuoyou_20190516_jdcash="f1kwaQ@a1hzJOmy@eU9Ya7-wM_Qg-T_SyXIb0g@flpkLei3@eU9YD7rQHo1btTm9shR7@eU9YE67FOpl9hTG0mjNp@eU9YBJrlD5xcixKfrS1U@eU9YG7TVDLlhgAyBsRpw@eU9YG4X6HpZMixS8lBBu@eU9YH6THD4pXkiqTuCFi@f0JgObLlIalJrA@eU9Ya7m3NaglpW3QziUW0A@eU9YFbnVJ6VArC-2lQtI@ZE9ILbHhMJR9oyq_ozs@cUJpO6X3Yf4m@e1JzPbLlJ6V5rzk@eU9Yaengbv9wozzUmiIU3g@eU9YaO22Z_og-DqGz3AX1Q@eU9Yaeqyb_sn-DvXzHNBhQ@eU9YaLi7bv8uom-EznEUhA@eU9YaLjmY_h18m2BwyIbhQ@eU9YOKTPGLRegB2mmCpg@eU9Ya-2wMPouoGqEnXRGgw@9pWHuVEVsF6EJM1tHciq1r4@Ih43a-62Yf8j8Gk@eU9YaOmzYPQmozzWzSEQhw"
+	zuoyou_20190516_jdcash="f1kwaQ@a1hzJOmy@eU9Ya7-wM_Qg-T_SyXIb0g@flpkLei3@eU9YD7rQHo1btTm9shR7@eU9YE67FOpl9hTG0mjNp@eU9YBJrlD5xcixKfrS1U@eU9YG7TVDLlhgAyBsRpw@eU9YG4X6HpZMixS8lBBu@eU9YH6THD4pXkiqTuCFi"
 	chiyu_jdcash="cENuJam3ZP0"
 	Jhone_Potte_20200824_jdcash="eU9Yaum1N_4j82-EzCUSgw@eU9Yar-7Nf518GyBniIWhw"
 	jidiyangguang_20190516_jdcash="eU9YaOjhYf4v8m7dnnBF1Q@eU9Ya762N_h3oG_RmXoQ0A"
