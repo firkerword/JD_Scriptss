@@ -191,7 +191,6 @@ cat >$dir_file/config/tmp/lxk0301_script.txt <<EOF
 	jd_car.js			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_club_lottery.js		#摇京豆
 	jd_shop.js			#进店领豆
-	jd_jdzz.js			#京东赚赚长期活动
 	jd_syj.js			#赚京豆
 	jd_kd.js			#京东快递签到 一天运行一次即可
 	jd_small_home.js		#东东小窝
@@ -274,8 +273,7 @@ done
 
 cdle_url="https://raw.githubusercontent.com/cdle/jd_study/main"
 cat >$dir_file/config/tmp/cdle_url.txt <<EOF
-	jd_morningSc.js		#早起赢现金
-	jd_angryCash.js		#愤怒的现金
+	jd_morningSc.js			#早起赢现金
 	jd_angryKoi.js			#愤怒的锦鲤
 	jd_goodMorning.js		#早起福利
 	jd_joy_park_help.js 		#汪汪乐园助力
@@ -346,6 +344,7 @@ cat >$dir_file/config/tmp/Aaron_url.txt <<EOF
 	jd_mohe.js			#5G超级盲盒
 	jd_ccSign.js			#领券中心签到
 	jd_cash.js			#签到领现金，每日2毛～5毛长期
+	jd_jdzz.js			#京东赚赚长期活动
 EOF
 
 for script_name in `cat $dir_file/config/tmp/Aaron_url.txt | grep -v "#.*js" | awk '{print $1}'`
@@ -397,8 +396,8 @@ do
 done
 
 cat >>$dir_file/config/collect_script.txt <<EOF
+	jd_dianjing.js			#电竞经理
 	jd_bean_change_new.js 		#资产变动强化版
-	jd_mp_h5.js			#疯狂星期五
 	star_dreamFactory_tuan.js 	#京喜开团　star261脚本
 	jd_OpenCard.py 			#开卡程序
 	jd_getFollowGift.py 		#关注有礼
@@ -483,13 +482,13 @@ ccr_run() {
 	#这里有的就不要加到concurrent_js_run_07
 	echo ""
 	$node $openwrt_script/JD_Script/js/jd_jxlhb.js			#京喜领红包
-	$node $openwrt_script/JD_Script/js/jd_angryCash.js 		#愤怒的现金
 	$node $openwrt_script/JD_Script/js/gua_xiaolong.js		#8.13-8.25 骁龙品牌日
 	$node $openwrt_script/JD_Script/js/jd_redPacket.js		#京东全民开红包(活动入口：京东APP首页-领券-锦鲤红包)
 }
 
 concurrent_js_run_07() {
 	#这里的也不会并发
+	$node $openwrt_script/JD_Script/js/jd_jdzz.js			#京东赚赚长期活动
 	$node $openwrt_script/JD_Script/js/jd_qcshj.js			#汽车生活节（不知道有啥用)
 	$node $openwrt_script/JD_Script/js/jd_dreamFactory.js 		#京喜工厂
 	$node $openwrt_script/JD_Script/js/jd_unsubscriLive.js		#取关主播
@@ -503,7 +502,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_car.js 			#京东汽车，签到满500赛点可兑换500京豆，一天运行一次即可
 	jd_cash.js 			#签到领现金，每日2毛～5毛长期
 	jd_sgmh.js 			#闪购盲盒长期活动
-	jd_jdzz.js			#京东赚赚长期活动
 	jd_syj.js 			#十元街签到,一天一次即可，一周30豆子
 	jd_market_lottery.js 		#幸运大转盘
 	jd_jin_tie.js 			#领金贴
@@ -511,7 +509,6 @@ cat >/tmp/jd_tmp/run_0 <<EOF
 	jd_ddnc_farmpark.js		#东东乐园
 	jd_sign_graphics.js		#京东签到图形验证
 	jd_joypark_task.js		#汪汪乐园每日任务
-	jd_mp_h5.js			#疯狂星期五
 	jd_dpqd.js			#店铺签到
 	jd_ccSign.js			#领券中心签到
 	jd_unsubscribe.js 		#取关店铺，没时间要求
@@ -578,7 +575,6 @@ EOF
 run_01() {
 cat >/tmp/jd_tmp/run_01 <<EOF
 	jd_big_winner.js		#翻翻乐
-	jd_live_redrain.js 		#超级直播间红包雨
 	jd_joypark_joy.js		#汪汪乐园养joy
 	jd_plantBean.js 		#种豆得豆，没时间要求，一个小时收一次瓶子
 	long_super_redrain.js		#整点红包雨
@@ -618,6 +614,8 @@ cat >/tmp/jd_tmp/run_03 <<EOF
 	jd_speed.js 			#天天加速 3小时运行一次，打卡时间间隔是6小时
 	jd_health.js			#健康社区
 	jd_mohe.js			#5G超级盲盒
+	jd_dianjing.js			#电竞经理
+	jd_joy_park_help.js 		#汪汪乐园助力
 EOF
 	echo -e "$green run_03$start_script_time $white"
 
@@ -702,7 +700,6 @@ EOF
 run_10_15_20() {
 cat >/tmp/jd_tmp/run_10_15_20 <<EOF
 	jd_superMarket.js 		#东东超市,0 10 15 20四场补货加劵
-	jd_joy_park_help.js 		#汪汪乐园助力
 	jd_speed_sign.js 		#京东极速版签到+赚现金任务
 	jd_speed_redpocke.js		#极速版红包
 EOF
@@ -2233,7 +2230,6 @@ f	tanherongyi_20210121_fr="24156b43b0664cff955e2bedea49e2b5@1cf02b657b524b90b882
 
 	#京喜开团
 	sed -i "s/helpFlag = true/helpFlag = false/g" $dir_file_js/star_dreamFactory_tuan.js
-	sed -i "27 a \let OPEN_DREAMFACTORY_TUAN = '1,2,3,4';" $dir_file_js/star_dreamFactory_tuan.js #京喜开团
 
 	#东东工厂
 	new_ddgc="T0225KkcRxoZ9AfVdB7wxvRcIQCjVWnYaS5kRrbA@T0225KkcRUhP9FCEKR79xaZYcgCjVWnYaS5kRrbA@T0205KkcH0RYsTOkY2iC8I10CjVWnYaS5kRrbA@T0205KkcJEZAjD2vYGGG4Ip0CjVWnYaS5kRrbA"
@@ -2449,8 +2445,8 @@ time() {
 npm_install() {
 	echo -e "$green 开始安装npm模块$white"
 	#安装js模块
-	cp $dir_file/git_clone/lxk0301_back/package.json $dir_file/package.json
-	cd $dir_file && npm -g install
+	cp $dir_file/git_clone/lxk0301_back/package.json $openwrt_script/package.json
+	cd $openwrt_script && npm -g install
 	npm install -g request http stream zlib vm png-js fs got tough-cookie audit date-fns ts-md5
 	npm install --save axios
 	cd $dir_file/cookies_web && npm -g install
